@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Método Builder — Plano de Pivô B2B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0C0D0E; --panel:#131416; --bone:#F4F5F1; --orange:#F4632F;
+    --dim:rgba(244,245,241,.80); --faint:rgba(244,245,241,.56);
+    --rule:rgba(244,245,241,.14); --rule-strong:rgba(244,245,241,.28);
+    --sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--bone);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 28px 120px}
+  header.doc{border-bottom:1px solid var(--rule-strong);padding-bottom:28px;margin-bottom:40px}
+  .lockup{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
+  .lockup b{color:var(--bone);font-weight:500}
+  .lockup .sep{width:1px;height:13px;background:var(--rule-strong)}
+  .lockup .tag{color:var(--orange)}
+  h1{font-size:clamp(34px,5vw,52px);line-height:1.05;font-weight:650;letter-spacing:-.02em;max-width:22ch}
+  .lede{margin-top:16px;font-size:19px;color:var(--dim);max-width:62ch}
+  h2{font-size:clamp(24px,3vw,32px);font-weight:650;letter-spacing:-.015em;margin:72px 0 8px;scroll-margin-top:24px}
+  h2 .n{font-family:var(--mono);font-size:.6em;color:var(--orange);letter-spacing:.08em;vertical-align:.35em;margin-right:10px}
+  h3{font-size:19px;font-weight:600;margin:34px 0 6px}
+  p{margin:12px 0;color:var(--dim);max-width:72ch}
+  p strong, li strong{color:var(--bone);font-weight:600}
+  ul,ol{margin:12px 0 12px 22px;color:var(--dim)}
+  li{margin:7px 0;max-width:70ch}
+  em{color:var(--bone);font-style:normal;font-weight:500}
+  .callout{border-left:3px solid var(--orange);background:var(--panel);padding:16px 20px;margin:20px 0;max-width:76ch}
+  .callout p{margin:6px 0}
+  table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14.5px}
+  th{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 14px 8px 0;border-bottom:1px solid var(--rule-strong)}
+  td{padding:10px 14px 10px 0;border-bottom:1px solid var(--rule);color:var(--dim);vertical-align:top}
+  td:first-child{color:var(--bone)}
+  .tbl-scroll{overflow-x:auto}
+  .mono{font-family:var(--mono);font-size:.92em}
+  .o{color:var(--orange)}
+  .toc{background:var(--panel);border:1px solid var(--rule);padding:22px 26px;margin:32px 0;columns:2;column-gap:40px}
+  .toc a{display:block;color:var(--dim);text-decoration:none;font-size:14.5px;padding:4px 0;break-inside:avoid}
+  .toc a:hover{color:var(--orange)}
+  .toc .tn{font-family:var(--mono);color:var(--orange);font-size:12px;margin-right:8px}
+  a{color:var(--orange);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:22px 0}
+  .kpi{background:var(--ink);padding:18px 20px}
+  .kpi .v{font-size:28px;font-weight:650;letter-spacing:-.02em}
+  .kpi .l{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:4px}
+  .src{font-family:var(--mono);font-size:12px;color:var(--faint);margin:8px 0 0}
+  footer{margin-top:90px;border-top:1px solid var(--rule-strong);padding-top:20px;font-family:var(--mono);font-size:12px;color:var(--faint)}
+  @media(max-width:720px){.toc{columns:1}}
+  @media print{body{background:#fff;color:#111}:root{--bone:#111;--dim:#333;--faint:#666;--panel:#f4f4f2;--ink:#fff;--rule:#ddd;--rule-strong:#bbb}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <div class="lockup"><b>CULTURA BUILDER</b><span class="sep"></span><span class="tag">Interno · Não distribuir</span><span class="sep"></span><span>17 Agosto 2026</span><span class="sep"></span><a href="/" style="color:inherit">← deck</a></div>
+  <h1>Plano de Pivô B2B<br><span class="o">O Sistema Operacional</span></h1>
+  <p class="lede">Auditoria completa do que existe hoje (hub, sites, anúncios, código) e o caminho tático — conteúdo, produto, time, rede de parceiros e marca — para transformar a Cultura Builder num negócio B2B de escala com o D2C como motor de talento. Base para a meta de longo prazo: uma empresa de R$ 1 bilhão.</p>
+</header>
+
+<nav class="toc">
+  <a href="#s1"><span class="tn">01</span>Sumário executivo</a>
+  <a href="#s2"><span class="tn">02</span>Raio-X: o que existe hoje (verificado)</a>
+  <a href="#s3"><span class="tn">03</span>Os cinco vazamentos que pagam o pivô</a>
+  <a href="#s4"><span class="tn">04</span>Arquitetura de marca: duas portas, um número</a>
+  <a href="#s5"><span class="tn">05</span>O Método como produto</a>
+  <a href="#s6"><span class="tn">06</span>Calendário de conteúdo — 12 meses</a>
+  <a href="#s7"><span class="tn">07</span>Hub: roadmap de produto</a>
+  <a href="#s8"><span class="tn">08</span>Time: contratações e papéis</a>
+  <a href="#s9"><span class="tn">09</span>Rede de builders e verticais de parceiros</a>
+  <a href="#s10"><span class="tn">10</span>Escada de ofertas e add-ons</a>
+  <a href="#s11"><span class="tn">11</span>D2C renovado</a>
+  <a href="#s12"><span class="tn">12</span>O caminho para R$ 1 bi</a>
+  <a href="#s13"><span class="tn">13</span>Esta semana</a>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="s1"><span class="n">01</span>Sumário executivo</h2>
+
+<p>Três auditorias rodaram hoje — hub (com acesso admin), comunicação pública (19 superfícies ao vivo + conta de anúncios) e código (4 repositórios). O quadro:</p>
+
+<ul>
+  <li><strong>O ativo é real.</strong> 8.152 usuários, 694 assinaturas ativas, R$ 1,30 mi vendidos pelo hub, 119 aulas, badges e um registro de projetos da comunidade já funcionando. 29% dos novos membros dizem no onboarding que querem <em>ensinar a equipe ou a empresa</em> a usar IA. Empresas já entram sozinhas pelo funil de pessoa física — em grupos.</li>
+  <li><strong>O motor D2C está parado.</strong> Zero vendas pagas desde 30/07. Quase toda venda recente foi com cupom de 50% e no plano Vitalício (pagamento único), que mata a recorrência. A medição de anúncios está quebrada há dez meses e 92% de quem inicia o checkout abandona antes do pagamento.</li>
+  <li><strong>A comunicação é o maior risco do pivô.</strong> Cinco “empresas” numa marca: três números de comunidade, quatro títulos do Bruno, quatro preços B2B, três ofertas de franquia incompatíveis — e a homepage manda tráfego enterprise para a pior página B2B, cujo e-mail de contato devolve mensagem.</li>
+  <li><strong>O produto não é greenfield.</strong> As primitivas do Método (badges, artefatos, diagnóstico, streaks) já existem no hub. Falta a camada de empresa: organizações, assentos, áreas, faixas com revisão, Builder Score e painel do sponsor. O bloqueio nº 1 é acesso ao código do hub (está com o Ariel).</li>
+  <li><strong>A rede é a alavanca do bilhão.</strong> Kelvin (construção), Giovanna (indústria), Felix (cinema/arte/música) e o produto kids/teens — todos vieram do funil D2C. Formalizar isso em dois trilhos (Operador Setorial e Parceiro de Produto Vertical) transforma a comunidade em canal de distribuição e entrega.</li>
+</ul>
+
+<div class="callout">
+  <p><strong>A tese do plano:</strong> não é “fazer B2B além do D2C”. É reorganizar tudo que existe em <em>um sistema operacional</em>: o D2C descobre e forma pessoas; o Método certifica; a rede vende e entrega; o hub mede; os add-ons (IA privada, agentes, cérebro) escalam o ticket. Cada camada alimenta a seguinte — e nenhuma depende de horas de fundador para crescer.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="s2"><span class="n">02</span>Raio-X: o que existe hoje (verificado)</h2>
+
+<h3>2.1 Hub (dados de admin, 17/08)</h3>
+<div class="kpi-row">
+  <div class="kpi"><div class="v">8.152</div><div class="l">usuários totais</div></div>
+  <div class="kpi"><div class="v">694</div><div class="l">assinaturas ativas</div></div>
+  <div class="kpi"><div class="v">R$ 1,30 mi</div><div class="l">total vendido (hub)</div></div>
+  <div class="kpi"><div class="v">8,0%</div><div class="l">conversão user→pago</div></div>
+  <div class="kpi"><div class="v">0</div><div class="l">vendas em agosto</div></div>
+  <div class="kpi"><div class="v">119</div><div class="l">aulas em 15 cursos</div></div>
+</div>
+
+<ul>
+  <li><strong>Conteúdo:</strong> 15 cursos / 119 aulas, 100% centrados em “construir apps com IA” (trilha implícita: iniciante → profissional → intermediário → avançado → negócio). <em>Zero</em> conteúdo por área de empresa (vendas, marketing, jurídico, financeiro, RH, operações). Lives (38) e workshops (20) somam quase metade do catálogo.</li>
+  <li><strong>Primitivas do Método já no ar:</strong> badge por curso (“1/15 badges”), streak diário, % de progresso; <em>Builders Projects</em> — membros submetem projetos com categorias, tags de senioridade (no-code → especialista), votos e prêmios. É o embrião do registro de artefatos das faixas.</li>
+  <li><strong>Diagnóstico de entrada já roda:</strong> 164 onboardings concluídos (21 na última semana) com ICP estruturado. Sinais-chave: <em>“quero ensinar minha equipe ou negócio a usar IA” = 29%</em>; “minha empresa/chefe pediu” = 12%; uso desejado em marketing e vendas = 12%; preferência por “praticando junto” = 48%.</li>
+  <li><strong>Empresas entrando sozinhas pelo funil PF:</strong> na última quinzena, 8+ cadastros do mesmo grupo de mídia OOH em 4 dias (incluindo compras e marketing), 2 do IBOPE, 1 da Kantar IBOPE, além de staff de clientes atuais. Não existe nenhum produto para capturá-las — elas caem na esteira de pessoa física.</li>
+  <li><strong>Oferta atual:</strong> Vitalício R$ 5.997 (pagamento único) · Premium R$ 2.998 · Workshop B2B R$ 499,90 · Workshop B2B Presencial R$ 297 · Workshop IA R$ 167. Programa de afiliados: R$ 200/assinatura. Quase todas as vendas recentes: cupom 50% + Vitalício — <em>o SKU que elimina renovação futura</em>. E os dois SKUs “B2B” estão quebrados na prática: o de R$ 297 não tem método de pagamento configurado (incomprável) e o de R$ 499,90 expirou em 11/08 sem nenhuma feature ou curso atrelado.</li>
+  <li><strong>Benefícios:</strong> stack forte de parceiros (AWS, NVIDIA Inception, Modal, DevRev, Zendesk, HubSpot etc.), majoritariamente indicações AWS Activate para a startup do próprio membro.</li>
+</ul>
+
+<h3>2.2 Comunicação pública (19 superfícies ao vivo)</h3>
+<div class="tbl-scroll"><table>
+  <tr><th>Lane</th><th>Superfícies</th><th>Estado</th></tr>
+  <tr><td>B2C</td><td>culturabuilder.com · hub (+ /subscription público) · cafe · criadores · insights</td><td>Home diz “+5.000 builders”; timer de escassez quebrado (704 dias); cafe/criadores no ar porém órfãos</td></tr>
+  <tr><td>B2B (4 variantes concorrentes)</td><td>ia. (forte, auditada) · corporate. (vazia, e-mail morto) · b2b. (“cérebro”, claims agressivos) · 4 verticais R$ 115k (construção/saúde/educação/franquias)</td><td>Homepage aponta para a <em>pior</em> (corporate.); a melhor (ia.) não é linkada de lugar nenhum e está fora do sitemap</td></tr>
+  <tr><td>Franquia/parceiros</td><td>parceiros. (R$ 50k, seções de economia construídas mas não renderizadas) · franquia.brunopessoa.com (spec R$ 20-30k) · franqueado.html · /rede · /builders-locais (protótipo público com /admin linkado)</td><td>Três ofertas incompatíveis no ar ao mesmo tempo; “franquias.” vende <em>para</em> franqueadoras — nome colide com recrutamento de franqueado</td></tr>
+</table></div>
+<p>Inconsistências de canon: comunidade = 5.000 / 7.000+ / 8.000+ / “8K certificados ativos” conforme a página; Bruno com 4 títulos; 4 preços B2B (nada / R$ 115k / ~R$ 205k implícito / R$ 150k na spec); 3 e-mails de contato, um deles (contato@) devolvendo mensagem justamente na página que recebe o tráfego enterprise da homepage; CNPJ presente só na ia.</p>
+
+<h3>2.3 Anúncios (conta “Next Level”, auditoria completa em <a href="https://ads.brunopessoa.com">ads.brunopessoa.com</a>)</h3>
+<ul>
+  <li>R$ 198.947 gastos em 10 meses → 98 compras rastreadas. Pixel sem evento Purchase; “nenhuma campanha jamais saiu da fase de aprendizado”.</li>
+  <li>Low-ticket: 2,7% do orçamento → <strong>70% das compras</strong> (únicas ROAS &gt; 1). Frio direto no R$ 2.998 nunca funcionou.</li>
+  <li>Checkout: 1.100 inícios/mês → 88 chegam ao pagamento → 19 compras. Parcelamento 12× R$ 249,83 escondido no site.</li>
+  <li>1.562 conversas de WhatsApp compradas (R$ 18k) sem fila de atendimento confirmada.</li>
+  <li>Só 1 campanha B2B na história da conta (R$ 757). Regra da auditoria: B2B só com conta e verba próprias.</li>
+</ul>
+
+<h3>2.4 Código</h3>
+<ul>
+  <li><strong>O código do hub não está nesta máquina.</strong> Está com o Ariel. Sem ele, nenhuma fase do produto B2B começa <em>dentro</em> do hub — este é o caminho crítico (F0).</li>
+  <li><strong>builders-club</strong> (local, não versionado — backup feito hoje): o melhor modelo de dados disponível — empresas, usuários, matrículas, progresso com RLS por empresa, motor de diagnóstico com pesos e <em>dados reais da Klini por departamento</em>. É a referência do schema B2B.</li>
+  <li><strong>culturabuilder-landings</strong>: todas as landings B2B/verticais/parceiros; leads caem em e-mail (Supabase de produção com envs placeholder — inserts falham em silêncio).</li>
+  <li>Achado paralelo: <span class="mono">enterprise-ai-academy</span> local tem o melhor protótipo de painel do sponsor (conclusão por departamento, colaborador em risco).</li>
+  <li><strong>Pipeline de conteúdo do feed (EC2):</strong> o único conteúdo fresco do hub é o feed do fórum, 100% gerado pela frota Águia (agente papagaio: boletim semanal + pulso diário, 55 posts desde abril) — via automação de navegador <em>logada na conta pessoal/admin do Bruno</em>, com limite de 1.023 caracteres por post. Não existe API de escrita no hub. Varredura da API pública confirma: <em>nenhum</em> conceito de organização, assento, área, faixa, badge de empresa ou score existe em produção.</li>
+  <li><strong>O modelo por assentos já foi desenhado duas vezes e nunca chegou à plataforma:</strong> spec de fev/2026 com escada de 5→300 licenças (R$ 26k→R$ 585k/ano) + schema do builders-club com <span class="mono">companies/seats</span> — enquanto produção só vende preço único por pessoa. É a lacuna mais larga entre o que foi planejado e o que dá para vender hoje.</li>
+  <li><strong>Segurança (agir já):</strong> a senha do hub da conta do Bruno está em texto plano num script morto legível no EC2 e replicada em ~10 backups de .env; a mesma conta é a que publica no feed e a que tem admin. Rotacionar a senha, varrer os backups e criar identidade de serviço para o publisher.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="s3"><span class="n">03</span>Os cinco vazamentos que pagam o pivô</h2>
+<p>Antes de qualquer coisa nova: cinco correções com dinheiro imediato do lado de dentro. Juntas, elas financiam o pivô sem caixa novo.</p>
+
+<div class="tbl-scroll"><table>
+  <tr><th>#</th><th>Vazamento</th><th>Correção</th><th>Impacto estimado</th></tr>
+  <tr><td>1</td><td>Agosto com <strong>zero vendas</strong> (fim do cupom ANIVERSARIO50 sem plano de sucessão)</td><td>Política de preço evergreen: parcelamento 12× visível, cupom só com janela real, Vitalício fora do checkout padrão (grandfather quem tem)</td><td>Voltar às ~19 vendas/mês ≈ R$ 57k/mês</td></tr>
+  <tr><td>2</td><td>Medição quebrada (sem Purchase, Lead em 86% dos pageviews, CAPI capenga)</td><td>Evento Purchase com valor + dedupe das conversões + CAPI; 1 dia de trabalho técnico</td><td>Toda a mídia volta a otimizar por venda real</td></tr>
+  <tr><td>3</td><td>92% de abandono entre checkout e pagamento (1.012 pessoas/mês)</td><td>Parcelamento na página, checkout no mesmo domínio, retargeting de carrinho</td><td>Dobrar o passo mais quente do funil dobra a receita D2C sem R$ 1 a mais de mídia</td></tr>
+  <tr><td>4</td><td>Empresas entrando pelo funil PF sem captura (grupos inteiros de cadastros corporativos)</td><td>Pergunta de roteamento no onboarding (“vim pela minha empresa”) + alerta interno por domínio corporativo + resposta comercial em 24h</td><td>Pipeline B2B orgânico e imediato — leads desta semana já na mesa</td></tr>
+  <tr><td>5</td><td>1.562 conversas de WhatsApp pagas sem fila de atendimento</td><td>Fila assumida pelo dono de Onboarding &amp; Success + agente de qualificação (Águia) na frente</td><td>Segunda maior perda da conta de anúncios, resgatável em dias</td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="s4"><span class="n">04</span>Arquitetura de marca: duas portas, um número</h2>
+
+<p><strong>Decisão central: uma marca, duas portas, um canon.</strong> “Cultura Builder” (pessoas) e “Cultura Builder Enterprise” (empresas) — e cada fato da empresa com um único valor oficial em todas as superfícies.</p>
+
+<h3>4.1 Canon único (corrigir em toda superfície de uma vez)</h3>
+<div class="tbl-scroll"><table>
+  <tr><th>Fato</th><th>Valor canônico</th><th>Hoje</th></tr>
+  <tr><td>Comunidade</td><td><strong>8.000+ builders</strong> (número já confirmado pelo Bruno; “certificados ativos” proibido até existir certificação formal)</td><td>5.000 / 7.000 / 8.000 / “8K certificados”</td></tr>
+  <tr><td>Título do Bruno</td><td><strong>“Co-fundador, Cultura Builder · Head of Strategic Innovations no Socios.com”</strong></td><td>4 versões (homepage com título desatualizado)</td></tr>
+  <tr><td>Preço B2B core</td><td><strong>R$ 115.000/ano</strong> (R$ 100k programa + R$ 15k setup) — referência pública; IA Privada a partir de R$ 15k/mês é <em>outro</em> SKU e assim apresentado</td><td>4 números diferentes</td></tr>
+  <tr><td>Contato</td><td>B2C → hub · B2B → <span class="mono">bruno@</span> (ou <span class="mono">enterprise@</span> se ativado de fato) · <span class="mono">contato@</span> <strong>eliminado de todas as páginas</strong> (devolve mensagem)</td><td>3 e-mails, 1 morto</td></tr>
+  <tr><td>Entidade legal</td><td>CNPJ 62.995.760/0001-33 no rodapé de <em>toda</em> superfície que vende</td><td>Só na ia.</td></tr>
+</table></div>
+
+<h3>4.2 Mapa de superfícies alvo</h3>
+<div class="tbl-scroll"><table>
+  <tr><th>Superfície</th><th>Ação</th></tr>
+  <tr><td>culturabuilder.com</td><td>Vira a mãe com duas portas claras acima da dobra: “Para você” → hub · “Para sua empresa” → ia. A seção enterprise da home aponta para <strong>ia.</strong>, nunca mais para corporate.</td></tr>
+  <tr><td>ia.culturabuilder.com</td><td><strong>A casa B2B única.</strong> Absorve o melhor do “cérebro” (b2b.) como um add-on nomeado dentro da escada de ofertas. Entra no sitemap e na navegação.</td></tr>
+  <tr><td>corporate.culturabuilder.com</td><td>Redirect 301 → ia. (a página não tem preço, prova, gente nem e-mail funcional)</td></tr>
+  <tr><td>b2b.brunopessoa.com / b2b.culturabuilder.com</td><td>Conteúdo do “cérebro governado” migra para ia. como produto da escada; claims sem lastro (logos “em operação”, hospedagem em território brasileiro, garantia 100% sem condição) passam pelo mesmo pente-fino factual que a ia. já passou; depois redirect</td></tr>
+  <tr><td>Verticais construção/saúde/educação/franquias</td><td>Mantêm — são as páginas dos Operadores Setoriais (§9). “franquias.” ganha aviso de escopo no topo para não colidir com recrutamento de parceiro</td></tr>
+  <tr><td>parceiros.culturabuilder.com</td><td><strong>Tirar do ar até alinhar</strong> à oferta oficial (spec de 31/07: sem taxa de R$ 50k; certificação R$ 3-5k + comissão por SKU). Hoje vende uma franquia de R$ 50 mil sem entidade legal e sem as seções de economia renderizadas</td></tr>
+  <tr><td>/rede, /builders-locais</td><td>Fora do ar (ou noindex + sem link) até o programa de builders locais existir formalmente; remover o link público de /admin</td></tr>
+  <tr><td>hub</td><td>Corrigir © 2026, matar o timer de 704 dias, esconder SKUs B2B de workshop do checkout público (viram oferta dentro da esteira comercial B2B)</td></tr>
+</table></div>
+
+<div class="callout"><p><strong>Regra de claims (herdada da auditoria factual da ia., agora para tudo):</strong> número sem fonte não sobe; cliente sem autorização escrita não vira logo; “em operação” só com entrega faturada; metas são “metas acordadas”, nunca promessas. Isso vale para páginas de parceiro e de vertical também — parceiro que inflar claim perde a licença (§9.5).</p></div>
+
+<!-- ============================================================ -->
+<h2 id="s5"><span class="n">05</span>O Método como produto</h2>
+
+<p>O deck (<a href="/">metodo.brunopessoa.com</a>) fixa o esqueleto: <strong>faixas</strong> por artefato (Operador → Construtor → Builder → Embaixador), <strong>liturgia</strong> fixa do Builders Club, <strong>temporadas</strong> trimestrais, <strong>esteira de 90 dias</strong>, <strong>Builder Score</strong>. O que a auditoria muda ou aprofunda:</p>
+
+<h3>5.1 O diagnóstico é o começo de tudo — e já existe em duas metades</h3>
+<p>Hoje: (a) o questionário por área que os professores usam para entender o negócio antes de começar (processo manual, valioso, continua); (b) o motor de onboarding do hub com 164 respostas estruturadas. O alvo é uma coisa só: <strong>Diagnóstico Builder</strong> — instrumento por departamento (base: o modelo real da Klini com 7+ áreas, dor 0-12, horas perdidas, quick wins), que gera três saídas de uma vez:</p>
+<ol>
+  <li><strong>Builder Score Zero</strong> da empresa (baseline da renovação);</li>
+  <li><strong>Briefing dos professores</strong> (o que cada área faz, com que sistemas, onde dói);</li>
+  <li><strong>Backlog de produto</strong> — dores recorrentes por setor viram playbooks e agentes vendáveis (é daqui que saem os add-ons certos, não de brainstorm).</li>
+</ol>
+
+<h3>5.2 Fundação em dois trilhos — não quatro aulas por empresa</h3>
+<p>Confirmado o instinto: aulas sob medida por empresa não escalam e não são necessárias. A Fundação vira <strong>turma coletiva mensal com dois trilhos paralelos</strong>, com colocação pelo diagnóstico individual:</p>
+<div class="tbl-scroll"><table>
+  <tr><th>Trilho</th><th>Para quem</th><th>4 sessões (2h, quinzenais dentro do mês)</th><th>Artefato de saída</th></tr>
+  <tr><td><strong>Fundamentos</strong></td><td>Não-técnicos, primeira automação</td><td>1 Mentalidade builder + primeiro agente no trabalho real · 2 Engenharia de contexto aplicada à função · 3 Automação do fluxo mais doloroso · 4 Demo day interno</td><td>1 automação pessoal em uso → <em>faixa Operador</em></td></tr>
+  <tr><td><strong>Avançado</strong></td><td>Quem já usa IA / perfil técnico</td><td>1 Stack builder (CLI, agentes, MCP) · 2 Do uso pessoal à ferramenta do time · 3 Dados e integrações da empresa · 4 Demo day interno</td><td>1 ferramenta usada por um colega → caminho direto para <em>Construtor</em></td></tr>
+</table></div>
+<p>Conteúdo-fonte: os 119 vídeos atuais cobrem ~80% do trilho Avançado e ~40% do Fundamentos (o catálogo é dev-cêntrico). O gap real de produção é o Fundamentos não-técnico e os playbooks por área — não “mais conteúdo de código”.</p>
+
+<h3>5.3 Faixas: estender o que o hub já tem</h3>
+<p>Builders Projects já é submissão de artefato com senioridade e votos; badges por curso já existem. A faixa é a fusão dos dois com <em>revisão humana</em>: submissão → evidência de uso (quem usa, desde quando) → revisor certificado aprova → badge de faixa no perfil. Regra inegociável: <strong>faixa nunca por presença, sempre por artefato verificado</strong> — é isso que torna o selo vendável para empresas e para o próprio membro no LinkedIn.</p>
+
+<!-- ============================================================ -->
+<h2 id="s6"><span class="n">06</span>Calendário de conteúdo — 12 meses</h2>
+
+<p>Quatro temporadas de 3 meses. Cada temporada: <strong>6 encontros quinzenais do Builders Club</strong> (2 demos de membros + 1 masterclass do tema + clínica por faixa), <strong>3 turmas mensais de Fundação</strong> (dois trilhos), <strong>1 playbook de área por mês</strong> publicado como trilha no hub. B2C e B2B assistem à <em>mesma</em> masterclass — a segmentação acontece na clínica e nas trilhas, não no palco. Convidados: especialistas da própria comunidade primeiro (são 8.000; o especialista de marketing que o Bruno citou entra na T3 — ou já na T1 como demo).</p>
+
+<div class="tbl-scroll"><table>
+  <tr><th>Temporada</th><th>Tema</th><th>Mês a mês</th><th>Playbooks lançados</th></tr>
+  <tr><td><strong>T1 · Set–Nov 2026</strong><br><span class="mono">“Automatize o seu trabalho”</span></td><td>Todo mundo vira Operador. Masterclasses: automação pessoal por função; engenharia de contexto no trabalho real; de planilha a agente.</td><td><strong>Set:</strong> lançamento da T1 + Turma 1 da Fundação nos dois trilhos + primeiras faixas retroativas para clientes atuais (Klini, Hospital Casa, Eatopia, THC). <strong>Out:</strong> Turma 2 + primeira masterclass com convidado da comunidade. <strong>Nov:</strong> Turma 3 + demo day aberto (vitrine de recrutamento B2B).</td><td>Comercial/Vendas · Marketing · Atendimento/CS</td></tr>
+  <tr><td><strong>T2 · Dez–Fev 2027</strong><br><span class="mono">“Do uso à ferramenta”</span></td><td>Push de Construtor: construir para o colega. Masterclasses: agentes de verdade em produção; no-code vs code; segurança básica de IA na empresa. Ritmo reduzido em dez/jan (férias BR) — mais trilha async, menos live.</td><td><strong>Dez:</strong> Turma 4 (menor) + retrospectiva do ano + Builder Score Q1 dos clientes retrofitados. <strong>Jan:</strong> Turma 5 + campanha “projeto de janeiro”. <strong>Fev:</strong> Turma 6 + primeira leva de faixas Construtor.</td><td>Financeiro · RH · Operações/Logística</td></tr>
+  <tr><td><strong>T3 · Mar–Mai 2027</strong><br><span class="mono">“IA na área”</span></td><td>A temporada das áreas — cada quinzena, uma função no palco com especialista convidado (marketing, vendas, jurídico, financeiro, RH, dados). É a temporada mais vendável para B2B e a vitrine dos playbooks.</td><td><strong>Mar:</strong> Turma 7 + masterclass Marketing (convidado especialista). <strong>Abr:</strong> Turma 8 + Jurídico/Compliance com IA. <strong>Mai:</strong> Turma 9 + Dados/BI + primeira turma de <em>certificação de professores</em> (§8).</td><td>Jurídico · Dados/BI · Compras/Suprimentos</td></tr>
+  <tr><td><strong>T4 · Jun–Ago 2027</strong><br><span class="mono">“Multiplique”</span></td><td>Temporada Embaixador: ensinar, certificar, governar. Masterclasses: academia interna de IA; governança e segurança; como medir impacto (o próprio Builder Score como conteúdo).</td><td><strong>Jun:</strong> Turma 10 + primeiros Embaixadores formados nos clientes. <strong>Jul:</strong> Turma 11 + certificação de Implementadores (leva 2). <strong>Ago:</strong> Turma 12 + balanço do ano 1 do Método + planejamento das verticais de parceiros para 2028.</td><td>TI/Segurança · Diretoria/Estratégia · Compilados setoriais (construção, saúde, indústria)</td></tr>
+</table></div>
+
+<p><strong>Produção necessária (o gap real):</strong> 12 playbooks de área (formato fixo: 4 vídeos curtos + 3 templates de agente/prompt + 1 caso real + 1 checklist de implantação) · trilho Fundamentos completo (8-10 vídeos novos) · trilhas async por faixa remontadas a partir do catálogo atual · currículo de certificação (professor/implementador). Tudo o mais já existe ou é curadoria.</p>
+
+<!-- ============================================================ -->
+<h2 id="s7"><span class="n">07</span>Hub: roadmap de produto</h2>
+
+<div class="callout"><p><strong>F0 — o caminho crítico é uma conversa, não um sprint:</strong> o código do hub está com o Ariel (co-fundador, dono de “Plataforma e infraestrutura”). Sem acesso ao repo + modelo de dados, tudo abaixo fica bloqueado <em>dentro</em> do hub. Pedir esta semana: acesso ao repositório, schema do banco, e uma call de 1h sobre identidade/assinaturas. Enquanto isso, nada espera: a operação roda manual e as peças externas (WhatsApp, relatório do sponsor, diagnóstico) não dependem do hub.</p></div>
+
+<div class="tbl-scroll"><table>
+  <tr><th>Fase</th><th>O que entrega</th><th>Base existente</th><th>Esforço (dev-dias)</th></tr>
+  <tr><td><strong>F1 · Camada de empresa</strong></td><td>Organizações, assentos com convite/consumo, tags de área, papel org-admin</td><td>Schema do builders-club (companies/users/RLS) como referência direta</td><td>5–8</td></tr>
+  <tr><td><strong>F2 · Faixas + artefatos</strong></td><td>Registro de artefato (evidência de uso), fila de revisão com SLA, badge de faixa no perfil, trilhas async gated por faixa</td><td>Builders Projects + badges por curso já no ar — é extensão, não criação</td><td>8–12</td></tr>
+  <tr><td><strong>F3 · Builder Score + painel do sponsor</strong></td><td>Rollup agendado por empresa (assentos ativos/semana, builds em produção por área, Embaixadores), com <em>snapshots históricos desde o dia zero</em>; visão read-only do sponsor com quebra por área e tendência</td><td>Dois protótipos de painel prontos (builders-club admin + enterprise-ai-academy)</td><td>5–8</td></tr>
+  <tr><td><strong>F4 · Diagnóstico por área</strong></td><td>Instrumento por departamento (modelo Klini generalizado), instância por empresa, rollup no Score</td><td>Motor de diagnóstico + 20 questões seeded + dados reais da Klini</td><td>4–6</td></tr>
+</table></div>
+
+<p><strong>Total: 22–34 dev-dias depois do F0.</strong> Um dev (ou fundador + agentes). Riscos nomeados: plataforma dupla (se F1 nascer fora do hub sem ponte de identidade, criamos o segundo login para sempre — não fazer); builders-club ainda não versionado (backup feito hoje; commitar e subir para privado é tarefa de 10 minutos pendente).</p>
+
+<h3>Independentes do hub (começam já)</h3>
+<ul>
+  <li><strong>Companion WhatsApp da esteira</strong> (infra Águia existente): boas-vindas, lembrete de sessão, cobrança de artefato, pesquisa-pulso de 2 perguntas pós-aula.</li>
+  <li><strong>Relatório do sponsor v0:</strong> página estática por cliente gerada trimestralmente (padrão Coolify) enquanto F3 não existe.</li>
+  <li><strong>Diagnóstico v0:</strong> formulário por área + planilha de score com os pesos do motor existente — roda no D-7 de qualquer contrato novo já na próxima assinatura.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="s8"><span class="n">08</span>Time: contratações e papéis</h2>
+
+<p>Sequência por gates de receita — nunca lote. Bandas de mercado BR 2026 (PJ ou CLT+encargos equivalente):</p>
+
+<div class="tbl-scroll"><table>
+  <tr><th>Ordem</th><th>Posição</th><th>Quando</th><th>Banda</th><th>O que destrava</th></tr>
+  <tr><td>1</td><td><strong>Head de Onboarding &amp; Success</strong> (BR, integral)</td><td><strong>Agora</strong> — é o gate de tudo (o “operador dedicado no Brasil” já identificado na análise da franquia)</td><td>R$ 10–15k/mês</td><td>Esteira de 90 dias, relacionamento com sponsors, relatórios de Score, fila do WhatsApp comercial. 1 pessoa carrega 15–20 contas</td></tr>
+  <tr><td>2</td><td><strong>Professores externos certificados</strong> (2–3, PJ por entrega)</td><td>Agora — certificação em set, primeira turma deles em out</td><td>R$ 2,5–4k por turma de Fundação entregue (4 sessões) + bônus por score da turma; masterclass convidada R$ 1–3k</td><td>Tira os fundadores da Fundação. Fonte: comunidade (8.000), Embaixadores de clientes, os próprios Kelvin/Giovanna</td></tr>
+  <tr><td>3</td><td><strong>Program/Content Manager</strong></td><td>+1 trimestre (após Temporada 1 provada)</td><td>R$ 7–10k/mês</td><td>Calendário das temporadas, produção dos playbooks, agenda de convidados, qualidade das trilhas</td></tr>
+  <tr><td>4</td><td><strong>Closer B2B</strong></td><td>Quando houver pipeline &gt; capacidade do Bruno (~10 oportunidades/mês ativas)</td><td>R$ 6–8k fixo + variável (OTE R$ 15–25k)</td><td>Fecha o que a rede e o funil D2C→B2B geram. Antes disso, operadores setoriais cobrem o comercial</td></tr>
+  <tr><td>5</td><td><strong>Eng. de produto (hub)</strong></td><td>Depois do F0; até lá, fundador + agentes</td><td>R$ 12–18k/mês PJ</td><td>F1→F4 em ~6 semanas dedicadas</td></tr>
+  <tr><td>6</td><td><strong>Partner/Network Manager</strong></td><td>Quando houver 5+ parceiros ativos (meados 2027)</td><td>R$ 8–12k/mês</td><td>Recrutamento, certificação, qualidade e economia da rede (§9)</td></tr>
+</table></div>
+
+<p><strong>Papéis dos fundadores depois disso:</strong> Bruno — canon, masterclasses, vendas enterprise, marca; Ariel — plataforma (F0–F4); Caio — formação e certificação de professores; Deco — operação e mercado (rede de parceiros até a contratação 6). Custo do time nos primeiros 6 meses: ~R$ 25–35k/mês — coberto pelos vazamentos do §3 antes de qualquer contrato novo.</p>
+
+<!-- ============================================================ -->
+<h2 id="s9"><span class="n">09</span>Rede de builders e verticais de parceiros</h2>
+
+<p>A pergunta do Bruno — “como deixar os que vieram do D2C ganharem dinheiro implementando com a nossa marca, ficando com 50–60%?” — tem resposta diferente por arquétipo. A régua: <strong>a % do parceiro sobe quando o custo de entrega é dele; desce quando a entrega é nossa.</strong> Um flat 50–60% sobre tudo deixa a CB no prejuízo nos SKUs de implantação (já modelado na spec de 31/07).</p>
+
+<h3>9.1 A escada da rede (do membro ao parceiro)</h3>
+<div class="tbl-scroll"><table>
+  <tr><th>Degrau</th><th>Quem</th><th>Como ganha</th><th>Gate de entrada</th></tr>
+  <tr><td>1 · Membro</td><td>Assinante D2C</td><td>Afiliado R$ 200/assinatura (já existe)</td><td>—</td></tr>
+  <tr><td>2 · Builder Certificado</td><td>Membro com faixa Builder</td><td>Selo verificável + prioridade em vagas da comunidade</td><td>Artefato verificado (faixa)</td></tr>
+  <tr><td>3 · Builder Local</td><td>Certificado ativo numa cidade/região</td><td>Comissão de indicação B2B (5% do ano 1) + entrega de café/workshops locais (R$ 480/pessoa do modelo cafe.)</td><td>Faixa Builder + 1 evento local realizado</td></tr>
+  <tr><td>4 · Implementador / Professor</td><td>Certificação paga (R$ 3–5k)</td><td>R$ 2,5–4k por turma de Fundação + 20% sobre implantação que executar</td><td>Certificação + turma-sombra aprovada</td></tr>
+  <tr><td>5 · Operador Setorial</td><td>Vende + co-entrega o Método no seu setor (Kelvin · construção; Giovanna · indústria)</td><td><strong>Comissão por SKU</strong> (spec 31/07): 50% formação · 20% implantação · 15% renovação a2 · 25% upsell · 20% licenças individuais</td><td>2+ contratos fechados como Implementador; exclusividade setorial <em>por desempenho</em> (meta mínima), nunca vitalícia</td></tr>
+  <tr><td>6 · Parceiro de Produto Vertical</td><td>Cria um produto novo sobre os trilhos da CB (Felix/Instituto — cinema, arte e música; produto kids/teens do palestrante do Blockchain.Rio)</td><td><strong>50–60% da receita líquida do SKU vertical</strong> — aqui o flat funciona, porque conteúdo e entrega são do parceiro; CB fica com 40–50% por marca, método, hub, marketing e billing. Leads originados pela CB deslocam 10 p.p. para a CB</td><td>Piloto de 1 temporada/turma com score mínimo antes da licença; licença anual renovável</td></tr>
+</table></div>
+
+<h3>9.2 Pilotos nomeados (fechar termos esta semana, § 13)</h3>
+<ul>
+  <li><strong>Kelvin — Operador Setorial · Construção.</strong> A landing já existe (construcao.culturabuilder.com, com 4 provas do setor). Formalizar no modelo Estágio 1 (parceria comercial PJ, sem taxa de entrada, comissão por SKU) e apontar a landing para ele como dono do setor.</li>
+  <li><strong>Giovanna — Operador Setorial · Indústria.</strong> Não existe landing — produzir com o template das verticais (é 1 dia de trabalho com o repo landings).</li>
+  <li><strong>Felix (Instituto) — Parceiro de Produto · Cinema, Arte e Música.</strong> “Cultura Builder Criativa” (nome a validar): D2C próprio + B2B para produtoras/secretarias de cultura. Piloto: 1 turma na T1/T2 dentro do hub, com o playbook de marketing como base adaptada.</li>
+  <li><strong>Produto Kids/Teens — Parceiro de Produto.</strong> Vertical de maior cuidado: menores de idade exigem consentimento parental, adequação LGPD específica e revisão pedagógica — piloto mais curto, guardrails próprios, sem a marca principal até passar o gate.</li>
+</ul>
+
+<h3>9.3 O que a CB entrega ao parceiro (por que 40–50% é justo)</h3>
+<p>Marca licenciada com kit e guardrails de claims · canon e trilhas do Método · hub (trilhas, faixas, score, billing) · geração de demanda (mídia paga com conta separada por lane, conteúdo, comunidade de 8.000) · stack de benefícios (AWS/NVIDIA para os alunos do parceiro) · contrato e cobrança centralizados. O parceiro entra com: conteúdo vertical, entrega, rede própria e a comunidade do nicho.</p>
+
+<h3>9.4 Jurídico — resolver antes do primeiro contrato assinado</h3>
+<div class="callout"><p><strong>Marca + método + taxa = risco de caracterizar franquia (Lei 13.966/2019 → COF obrigatória 10 dias antes de qualquer pagamento).</strong> Estrutura recomendada (já desenhada no briefing do cof.html): degraus 4–5 como <em>parceria comercial PJ</em> sem taxa de entrada (só certificação-treinamento R$ 3–5k, que é serviço educacional); degrau 6 como <em>licença de marca e metodologia com revenue share</em>, sem taxa. E tirar do ar o parceiros. com “Investimento Beta R$ 50.000” — é exatamente a estrutura que dispara a caracterização, publicada sem entidade legal e sem COF. Revisão de advogado nos dois modelos de contrato antes de Kelvin/Giovanna/Felix assinarem.</p></div>
+
+<h3>9.5 Qualidade da rede</h3>
+<p>O mesmo instrumento mede todo mundo: <strong>Builder Score dos clientes do parceiro</strong> decide renovação de exclusividade, e violação dos guardrails de claims rescinde a licença. A rede usa o produto que vendemos — dogfood como governança.</p>
+
+<!-- ============================================================ -->
+<h2 id="s10"><span class="n">10</span>Escada de ofertas e add-ons</h2>
+
+<p>Hoje um prospect encontra preços de R$ 167 a R$ 150.000 sem nenhuma página que explique a escada. A escada oficial, publicada na ia.:</p>
+
+<div class="tbl-scroll"><table>
+  <tr><th>Degrau</th><th>Oferta</th><th>Preço canônico</th><th>Gatilho de venda</th></tr>
+  <tr><td>0</td><td>Diagnóstico executivo (30 min grátis sob NDA → diagnóstico por área pago)</td><td>Grátis → R$ 15–25k (abatível no programa)</td><td>Entrada de todo B2B — “tudo começa no diagnóstico”</td></tr>
+  <tr><td>1</td><td><strong>Método Builder</strong> (Fundação + temporadas + faixas + Score, por assento)</td><td>R$ 115.000/ano (15 assentos ref.)</td><td>Diagnóstico concluído</td></tr>
+  <tr><td>2</td><td>Expansão de assentos/áreas</td><td>Por assento incremental</td><td>Builder Score: área sem build + demanda interna</td></tr>
+  <tr><td>3</td><td><strong>IA Privada</strong> (infra dedicada + governança)</td><td>a partir de R$ 15k/mês + R$ 25k setup</td><td>Dado sensível aparece no diagnóstico ou nos builds</td></tr>
+  <tr><td>4</td><td><strong>Cérebro governado</strong> (memória operacional com fontes; o produto do b2b., renomeado para dentro da escada)</td><td>Proposta por escopo</td><td>≥1 faixa Builder em produção + dor de conhecimento disperso</td></tr>
+  <tr><td>5</td><td>Agentes sob medida / implantação</td><td>Projeto (R$ 25–67k ref. spec)</td><td>Quick wins do diagnóstico que o time do cliente não vai construir sozinho</td></tr>
+  <tr><td>6</td><td>Certificações (Embaixador interno · Implementador · Professor)</td><td>R$ 3–5k/pessoa</td><td>T4 de cada cliente; alimenta a rede (§9)</td></tr>
+</table></div>
+
+<p><strong>Acima de 15 assentos:</strong> a escada de fev/2026 encontrada nos arquivos (5→300 licenças, R$ 26k→R$ 585k/ano) serve de âncora de preço para expansão de assentos — reconciliada com o canônico R$ 115k/15 assentos, nunca publicada como tabela paralela.</p>
+<p><strong>Regra de ouro dos add-ons:</strong> upsell disparado por <em>dados do Score e do diagnóstico</em>, não por calendário comercial. A empresa com 3 áreas sem nenhum build não recebe oferta de cérebro — recebe mais Fundação. É o que mantém o NPS que sustenta a rede.</p>
+
+<!-- ============================================================ -->
+<h2 id="s11"><span class="n">11</span>D2C renovado</h2>
+
+<p>O D2C não é a linha de lucro — é <strong>a mina de talento, a prova social e o canal de distribuição</strong> da máquina toda (Kelvin, Giovanna e Felix vieram dela; 29% dos novos membros já pedem o B2B; empresas entram sozinhas). Mas precisa parar de sangrar:</p>
+
+<ol>
+  <li><strong>Cirurgia de oferta:</strong> Vitalício sai do checkout padrão (existentes mantidos; badge de fundador honrado). Escada: entrada R$ 167–497 (o low-ticket que os anúncios provaram) → Premium R$ 2.998/ano <em>recorrente</em> com 12× visível → upsell certificação/faixa. Cupom só com janela real.</li>
+  <li><strong>Mídia pelo playbook da auditoria:</strong> 2 campanhas (aquisição low-ticket fria + retargeting Premium), verba R$ 15k/mês até a medição rodar 30 dias limpa, depois escala 20–30%/semana com CAC &lt; R$ 999. B2B com conta e verba próprias, nunca misturadas.</li>
+  <li><strong>Funil D2C→B2B instrumentado:</strong> pergunta de roteamento no onboarding + detecção de domínio corporativo + oferta-ponte (workshop B2B pago como degrau de entrada da empresa — o SKU de R$ 297–499 renasce como isca corporativa controlada, fora do checkout público).</li>
+  <li><strong>Conteúdo:</strong> a máquina editorial existente (Content Desk diário, clipper de reels) ganha a pauta das faixas: toda semana, 1 história de membro que subiu de faixa + 1 demo de build real. Instagram (11k) é D2C; <strong>LinkedIn é a lane B2B</strong> — hoje é só um link no rodapé; passa a receber os cases do Builder Score e os artigos do canon. Metas 90 dias: IG 11k→20k com os reels de demos; LinkedIn company page ativa com 2 posts/semana.</li>
+  <li><strong>Builder AI / hub como produto de retenção:</strong> o assistente “Brother” e o CLI builder são diferenciais de assinatura — empacotar nas trilhas (aula 1 de cada trilho instala o builder), não como curiosidade à parte.</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="s12"><span class="n">12</span>O caminho para R$ 1 bi</h2>
+
+<p>Honestidade primeiro: hoje o run-rate combinado (D2C + contratos B2B documentados) é da ordem de <strong>R$ 1,5–2,5 mi/ano</strong>. “Empresa de R$ 1 bi” significa <em>valuation</em> — que, para um híbrido educação+plataforma+rede no Brasil, exige algo como <strong>R$ 120–180 mi de receita anual crescendo &gt;50%</strong> (múltiplos 6–8×). Nenhuma linha atual chega lá multiplicando fundador — só as três camadas que escalam sem ele:</p>
+
+<div class="tbl-scroll"><table>
+  <tr><th>Horizonte</th><th>Meta de receita</th><th>Composição dominante</th><th>Gate de passagem (prova, não data)</th></tr>
+  <tr><td><strong>H1 · até fim de 2027</strong></td><td>R$ 6–9 mi/ano</td><td>25–35 empresas no Método (R$ 115k) + 4–6 IA Privada + D2C consertado (R$ 1 mi) + primeiros 4 parceiros ativos</td><td>Esteira + faixas rodando sem fundador na entrega; Score provando renovação ≥80%; 2 operadores setoriais lucrativos</td></tr>
+  <tr><td><strong>H2 · 2028–29</strong></td><td>R$ 25–50 mi/ano</td><td>Rede: 15–25 operadores/parceiros × R$ 1–2 mi de GMV cada (take CB 40–50%) + 100+ empresas diretas + verticais de produto (Criativa, Kids) escaladas + certificações como linha própria</td><td>Playbook de parceiro replicável (3 casos com payback &lt; 12 meses); hub multiempresa completo; canon licenciável</td></tr>
+  <tr><td><strong>H3 · 2030+</strong></td><td>R$ 120 mi+ /ano</td><td>Plataforma (hub como SaaS de cultura builder + Score como padrão de mercado) + rede nacional/LatAm (tradução do canon, nunca exportação de horas) + base D2C como funil contínuo</td><td>Score reconhecido como métrica de mercado; rede se auto-recruta; M&A/aporte para acelerar LatAm</td></tr>
+</table></div>
+
+<p>O que <em>não</em> muda em nenhum horizonte: fundador só em canon, masterclass e venda enterprise; toda entrega mensurada pelo mesmo Score; nenhuma camada nova antes do gate da anterior. O bilhão não vem de uma linha — vem do <strong>empilhamento disciplinado</strong> das cinco camadas sobre o mesmo sistema operacional.</p>
+
+<!-- ============================================================ -->
+<h2 id="s13"><span class="n">13</span>Esta semana</h2>
+
+<div class="tbl-scroll"><table>
+  <tr><th>Dia</th><th>Ações</th><th>Dono</th></tr>
+  <tr><td><strong>Seg</strong></td><td>Triage de marca: corporate. → redirect para ia.; CTA enterprise da home → ia.; canon único (8.000+, título, contato, CNPJ) aplicado nas superfícies principais; parceiros. fora do ar; /rede e /builders-locais sem index; timer e © do hub corrigidos</td><td>Bruno + agentes (landings é repo local; hub via Ariel ou admin)</td></tr>
+  <tr><td><strong>Seg</strong></td><td>Segurança: rotacionar a senha do hub (texto plano em script morto no EC2 + ~10 backups de .env), varrer os backups, criar conta de serviço para o publisher do feed (hoje posta como a conta admin do Bruno)</td><td>Bruno + agentes (EC2)</td></tr>
+  <tr><td><strong>Seg–Ter</strong></td><td>Medição: evento Purchase com valor + dedupe + CAPI; 12× visível no checkout; autópsia do agosto-zero (cupom? checkout? gateway?)</td><td>Bruno/dev + suporte do time atual</td></tr>
+  <tr><td><strong>Ter</strong></td><td>Captura B2B: contato comercial com o grupo de mídia que cadastrou 8 pessoas e com os leads IBOPE/Kantar (lista já extraída); pergunta de roteamento no onboarding do hub</td><td>Bruno (contato) · Ariel (onboarding)</td></tr>
+  <tr><td><strong>Qua</strong></td><td>F0: pedido formal ao Ariel (repo + schema + call de identidade) · commitar/subir builders-club para repo privado · spec do F1 entregue</td><td>Bruno + Ariel</td></tr>
+  <tr><td><strong>Qui</strong></td><td>Rede: minutas dos 4 pilotos (Kelvin, Giovanna, Felix, Kids) na estrutura do §9.4 → advogado; convite formal aos 4</td><td>Bruno + advogado</td></tr>
+  <tr><td><strong>Sex</strong></td><td>Método: declarar Temporada 1 (tema, datas dos 6 encontros, Turma 1 da Fundação em setembro) + esboço do currículo de certificação de professores + abrir vaga do Head de Onboarding &amp; Success</td><td>Bruno + Caio</td></tr>
+</table></div>
+
+<p>Documentos-fonte: <a href="/">deck do Método</a> · <a href="https://ads.brunopessoa.com">auditoria de anúncios</a> · <a href="https://franquia.brunopessoa.com">spec da micro-franquia (31/07)</a> · <a href="https://ia.culturabuilder.com">ia. (padrão de claims)</a>. Auditorias completas de comunicação, hub e código: nos registros internos desta data (17/08).</p>
+
+<footer>CULTURA BUILDER · MÉTODO BUILDER · PLANO DE PIVÔ B2B · INTERNO · 17.08.2026 — dados verificados nas auditorias da mesma data; números de admin do hub são snapshot de 17/08.</footer>
+
+</div>
+</body>
+</html>
