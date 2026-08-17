@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Pivô B2B — TL;DR — Interno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0C0D0E;
+    --panel:#131416;
+    --bone:#F4F5F1;
+    --orange:#F4632F;
+    --dim:rgba(244,245,241,.80);
+    --faint:rgba(244,245,241,.56);
+    --rule:rgba(244,245,241,.14);
+    --rule-strong:rgba(244,245,241,.28);
+    --sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:var(--ink);
+    color:var(--bone);
+    font-family:var(--sans);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .slide{
+    position:absolute;inset:0;display:none;
+    padding:clamp(40px,6.5vh,72px) clamp(48px,7vw,120px);
+    flex-direction:column;
+  }
+  .slide.active{display:flex}
+  .lockup{
+    display:flex;align-items:center;gap:14px;
+    font-family:var(--mono);
+    font-size:clamp(11px,1.15vw,14px);
+    letter-spacing:.14em;text-transform:uppercase;
+    color:var(--faint);
+    margin-bottom:auto;padding-bottom:28px;
+  }
+  .lockup b{color:var(--bone);font-weight:500}
+  .lockup .sep{width:1px;height:14px;background:var(--rule-strong)}
+  .lockup .tag{color:var(--orange)}
+  .foot{
+    margin-top:auto;padding-top:22px;
+    display:flex;align-items:center;justify-content:space-between;
+    font-family:var(--mono);
+    font-size:clamp(11px,1.1vw,13px);
+    color:var(--faint);
+  }
+  .belt-progress{width:clamp(140px,18vw,240px);height:3px;background:var(--rule);position:relative;overflow:hidden}
+  .belt-progress i{position:absolute;inset:0;right:auto;background:var(--orange);width:0;transition:width .35s ease}
+  .body{flex:0 0 auto;width:100%;max-width:1120px}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:clamp(12px,1.25vw,15px);
+    letter-spacing:.16em;text-transform:uppercase;
+    color:var(--orange);
+    margin-bottom:clamp(16px,2.4vh,26px);
+  }
+  h1{
+    font-size:clamp(40px,4.9vw,62px);
+    line-height:1.04;font-weight:650;letter-spacing:-.022em;
+    max-width:18ch;
+  }
+  .sub{
+    margin-top:clamp(14px,2vh,22px);
+    font-size:clamp(20px,2.1vw,27px);
+    color:var(--dim);font-weight:400;max-width:44ch;
+  }
+  .rows{margin-top:clamp(28px,4.5vh,48px)}
+  .row{
+    display:flex;align-items:baseline;gap:clamp(20px,2.6vw,36px);
+    border-top:1px solid var(--rule);
+    padding:clamp(12px,2vh,19px) 0;
+    font-size:clamp(20px,2.05vw,26px);
+    line-height:1.3;color:var(--bone);
+  }
+  .row:last-child{border-bottom:1px solid var(--rule)}
+  .row .k{
+    font-family:var(--mono);
+    font-size:clamp(15px,1.5vw,19px);
+    color:var(--orange);
+    min-width:clamp(52px,6vw,84px);
+    letter-spacing:.04em;
+  }
+  .row .t{color:var(--dim)}
+  .row .t strong{color:var(--bone);font-weight:600}
+  .row.plain{color:var(--dim)}
+  .note{
+    margin-top:clamp(16px,2.6vh,24px);
+    font-family:var(--mono);
+    font-size:clamp(14px,1.4vw,17px);
+    color:var(--faint);
+  }
+  .note em{color:var(--orange);font-style:normal}
+  .faixa{display:flex;gap:5px;height:10px;width:clamp(220px,26vw,340px);margin-top:clamp(28px,4.5vh,44px)}
+  .faixa i{flex:1;background:var(--rule)}
+  .faixa i.on{background:var(--orange)}
+  .stats{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:1px;background:var(--rule);border:1px solid var(--rule);
+    margin-top:clamp(28px,4.5vh,48px);
+  }
+  .stat{background:var(--ink);padding:clamp(16px,2.6vh,26px) clamp(18px,2vw,28px)}
+  .stat .v{font-size:clamp(34px,3.6vw,52px);font-weight:650;letter-spacing:-.02em;line-height:1}
+  .stat .v.alert{color:var(--orange)}
+  .stat .l{font-family:var(--mono);font-size:clamp(11px,1.1vw,13px);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:8px}
+  .cover h1{font-size:clamp(64px,9vw,116px);max-width:none;letter-spacing:-.028em}
+  .cover .sub{font-size:clamp(22px,2.4vw,30px)}
+  .closing h1{font-size:clamp(52px,6.6vw,88px);max-width:16ch}
+  .closing h1 .o{color:var(--orange)}
+  @media (prefers-reduced-motion:reduce){.belt-progress i{transition:none}}
+  @media print{
+    body{overflow:visible;background:var(--ink)}
+    .slide{display:flex !important;position:relative;width:1280px;height:720px;padding:56px 88px;page-break-after:always;break-after:page}
+    .belt-progress i{transition:none}
+  }
+  @page{size:1280px 720px;margin:0}
+</style>
+</head>
+<body>
+
+<!-- 1 · CAPA -->
+<section class="slide cover" data-n="1">
+  <div class="lockup"><b>CULTURA BUILDER</b><span class="sep"></span><span class="tag">Interno</span><span class="sep"></span><span>17 Agosto 2026</span></div>
+  <div class="body">
+    <p class="eyebrow">Resumo executivo do plano</p>
+    <h1>Pivô B2B</h1>
+    <p class="sub">Três auditorias, um plano — e o que fazemos esta semana.</p>
+    <div class="faixa" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:9.1%"></i></div><span class="count">01 / 11</span></div>
+</section>
+
+<!-- 2 · O QUE AUDITAMOS -->
+<section class="slide" data-n="2">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">O que auditamos hoje</p>
+    <h1>Tudo, de uma vez</h1>
+    <div class="rows">
+      <div class="row plain"><span class="t">O hub por dentro — com acesso admin</span></div>
+      <div class="row plain"><span class="t">As 19 superfícies públicas + a conta de anúncios</span></div>
+      <div class="row plain"><span class="t">O código nos 4 repositórios + a frota no EC2</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:18.2%"></i></div><span class="count">02 / 11</span></div>
+</section>
+
+<!-- 3 · NÚMEROS -->
+<section class="slide" data-n="3">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">O hub em números</p>
+    <h1>O ativo é real</h1>
+    <div class="stats">
+      <div class="stat"><div class="v">8.152</div><div class="l">usuários</div></div>
+      <div class="stat"><div class="v">694</div><div class="l">assinaturas ativas</div></div>
+      <div class="stat"><div class="v">R$ 1,3 mi</div><div class="l">vendidos</div></div>
+      <div class="stat"><div class="v">119</div><div class="l">aulas</div></div>
+      <div class="stat"><div class="v">8%</div><div class="l">conversão</div></div>
+      <div class="stat"><div class="v alert">0</div><div class="l">vendas em agosto</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:27.3%"></i></div><span class="count">03 / 11</span></div>
+</section>
+
+<!-- 4 · D2C PARADO -->
+<section class="slide" data-n="4">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">O achado urgente</p>
+    <h1>D2C: o motor está parado</h1>
+    <div class="rows">
+      <div class="row plain"><span class="t">Zero vendas desde 30 de julho — o cupom acabou e nada o substituiu</span></div>
+      <div class="row plain"><span class="t">Quase toda venda era Vitalício com 50% off: mata a renovação</span></div>
+      <div class="row plain"><span class="t">92% de quem inicia o checkout abandona antes de pagar</span></div>
+      <div class="row plain"><span class="t">O pixel da Meta nunca registrou uma compra</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:36.4%"></i></div><span class="count">04 / 11</span></div>
+</section>
+
+<!-- 5 · VAZAMENTOS -->
+<section class="slide" data-n="5">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">A boa notícia</p>
+    <h1>Cinco vazamentos pagam o pivô</h1>
+    <div class="rows">
+      <div class="row"><span class="k">01</span><span class="t">Preço evergreen, com 12× visível</span></div>
+      <div class="row"><span class="k">02</span><span class="t">Evento de compra na Meta — um dia de trabalho</span></div>
+      <div class="row"><span class="k">03</span><span class="t">Checkout no mesmo domínio</span></div>
+      <div class="row"><span class="k">04</span><span class="t">Capturar as empresas que entram pelo funil de pessoa física</span></div>
+      <div class="row"><span class="k">05</span><span class="t">Fila de atendimento nas 1.562 conversas de WhatsApp já pagas</span></div>
+    </div>
+    <p class="note">Sem caixa novo — <em>o pivô se financia</em>.</p>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:45.5%"></i></div><span class="count">05 / 11</span></div>
+</section>
+
+<!-- 6 · PRODUTO -->
+<section class="slide" data-n="6">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">Produto</p>
+    <h1>Mais perto do que parece</h1>
+    <div class="rows">
+      <div class="row plain"><span class="t">Badges, streaks e projetos da comunidade já existem no hub</span></div>
+      <div class="row plain"><span class="t">Falta a camada de empresa: assentos, áreas, faixas, Score</span></div>
+      <div class="row plain"><span class="t">Bloqueio real: o código do hub está com o Ariel</span></div>
+      <div class="row plain"><span class="t">Depois do acesso: 22–34 dias de dev</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:54.5%"></i></div><span class="count">06 / 11</span></div>
+</section>
+
+<!-- 7 · DEMANDA -->
+<section class="slide" data-n="7">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">Demanda</p>
+    <h1>As empresas já batem na porta</h1>
+    <div class="rows">
+      <div class="row plain"><span class="t">29% do onboarding: “quero ensinar minha equipe ou negócio”</span></div>
+      <div class="row plain"><span class="t">8 pessoas do mesmo grupo de mídia entraram em 4 dias</span></div>
+      <div class="row plain"><span class="t">Nomes grandes de pesquisa e mídia no funil esta semana</span></div>
+      <div class="row plain"><span class="t">Hoje, ninguém captura essas empresas</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:63.6%"></i></div><span class="count">07 / 11</span></div>
+</section>
+
+<!-- 8 · MARCA -->
+<section class="slide" data-n="8">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">Marca</p>
+    <h1>O maior risco do pivô</h1>
+    <div class="rows">
+      <div class="row plain"><span class="t">19 superfícies no ar falando como 5 empresas diferentes</span></div>
+      <div class="row plain"><span class="t">3 números de comunidade, 4 títulos, 4 preços B2B</span></div>
+      <div class="row plain"><span class="t">A home manda empresas para a página com e-mail morto</span></div>
+      <div class="row plain"><span class="t">Página vendendo franquia de R$ 50 mil sem entidade legal — fora do ar</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:72.7%"></i></div><span class="count">08 / 11</span></div>
+</section>
+
+<!-- 9 · SEGURANÇA -->
+<section class="slide" data-n="9">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">Segurança</p>
+    <h1>Resolver na segunda</h1>
+    <div class="rows">
+      <div class="row plain"><span class="t">Senha admin do hub em texto plano no EC2 — e em 10 backups</span></div>
+      <div class="row plain"><span class="t">O bot do feed posta como a conta pessoal do Bruno</span></div>
+      <div class="row plain"><span class="t">Rotacionar a senha + conta de serviço para o publisher</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:81.8%"></i></div><span class="count">09 / 11</span></div>
+</section>
+
+<!-- 10 · ESTA SEMANA -->
+<section class="slide" data-n="10">
+  <div class="lockup"><b>PIVÔ B2B</b></div>
+  <div class="body">
+    <p class="eyebrow">Esta semana</p>
+    <h1>Cinco dias, cinco entregas</h1>
+    <div class="rows">
+      <div class="row"><span class="k">SEG</span><span class="t">Triage de marca + rotação de senha</span></div>
+      <div class="row"><span class="k">TER</span><span class="t">Medição e checkout + contato com os leads corporativos</span></div>
+      <div class="row"><span class="k">QUA</span><span class="t">Repo do hub com o Ariel + spec da camada de empresa</span></div>
+      <div class="row"><span class="k">QUI</span><span class="t">Termos dos 4 parceiros verticais no advogado</span></div>
+      <div class="row"><span class="k">SEX</span><span class="t">Temporada 1 declarada + vaga do Head de Onboarding</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:90.9%"></i></div><span class="count">10 / 11</span></div>
+</section>
+
+<!-- 11 · FECHAMENTO -->
+<section class="slide closing" data-n="11">
+  <div class="lockup"><b>CULTURA BUILDER</b><span class="sep"></span><span>Pivô B2B</span></div>
+  <div class="body">
+    <h1>Nada disso precisa<br><span class="o">de caixa novo.</span></h1>
+    <p class="note">Plano completo: <em>metodo.brunopessoa.com/plano.html</em></p>
+    <div class="faixa" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+  </div>
+  <div class="foot"><div class="belt-progress"><i style="width:100.0%"></i></div><span class="count">11 / 11</span></div>
+</section>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var total=slides.length;
+  var cur=0;
+  function clamp(n){return Math.max(0,Math.min(total-1,n));}
+  function pad(n){return (n<10?'0':'')+n;}
+  function show(n,push){
+    cur=clamp(n);
+    slides.forEach(function(s,i){s.classList.toggle('active',i===cur);});
+    slides.forEach(function(s){
+      var bp=s.querySelector('.belt-progress i');
+      if(bp)bp.style.width=(((cur+1)/total)*100)+'%';
+      var c=s.querySelector('.count');
+      if(c)c.textContent=pad(cur+1)+' / '+pad(total);
+    });
+    if(push!==false)history.replaceState(null,'','#'+(cur+1));
+  }
+  var fromHash=parseInt(location.hash.slice(1),10);
+  show(isNaN(fromHash)?0:fromHash-1,false);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(cur+1);}
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();show(cur-1);}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(total-1);}
+  });
+  document.addEventListener('click',function(e){
+    if(e.target.closest('a'))return;
+    var x=e.clientX/window.innerWidth;
+    show(x<0.33?cur-1:cur+1);
+  });
+  window.addEventListener('hashchange',function(){
+    var n=parseInt(location.hash.slice(1),10);
+    if(!isNaN(n))show(n-1,false);
+  });
+})();
+</script>
+</body>
+</html>
