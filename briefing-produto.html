@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Briefing Produto — Hub para Empresas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0C0D0E; --panel:#131416; --bone:#F4F5F1; --orange:#F4632F;
+    --dim:rgba(244,245,241,.80); --faint:rgba(244,245,241,.56);
+    --rule:rgba(244,245,241,.14); --rule-strong:rgba(244,245,241,.28);
+    --sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--bone);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 28px 120px}
+  header.doc{border-bottom:1px solid var(--rule-strong);padding-bottom:28px;margin-bottom:40px}
+  .lockup{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
+  .lockup b{color:var(--bone);font-weight:500}
+  .lockup .sep{width:1px;height:13px;background:var(--rule-strong)}
+  .lockup .tag{color:var(--orange)}
+  h1{font-size:clamp(30px,4.6vw,46px);line-height:1.06;font-weight:650;letter-spacing:-.02em;max-width:24ch}
+  .lede{margin-top:14px;font-size:18px;color:var(--dim);max-width:64ch}
+  h2{font-size:clamp(22px,2.8vw,28px);font-weight:650;letter-spacing:-.015em;margin:64px 0 8px;scroll-margin-top:24px}
+  h2 .n{font-family:var(--mono);font-size:.6em;color:var(--orange);letter-spacing:.08em;vertical-align:.35em;margin-right:10px}
+  h3{font-size:18px;font-weight:600;margin:30px 0 6px}
+  p{margin:12px 0;color:var(--dim);max-width:74ch}
+  p strong, li strong, td strong{color:var(--bone);font-weight:600}
+  ul,ol{margin:12px 0 12px 22px;color:var(--dim)}
+  li{margin:7px 0;max-width:72ch}
+  em{color:var(--bone);font-style:normal;font-weight:500}
+  .callout{border-left:3px solid var(--orange);background:var(--panel);padding:16px 20px;margin:20px 0;max-width:78ch}
+  .callout p{margin:6px 0}
+  table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 12px 8px 0;border-bottom:1px solid var(--rule-strong)}
+  td{padding:10px 12px 10px 0;border-bottom:1px solid var(--rule);color:var(--dim);vertical-align:top}
+  td:first-child{color:var(--bone)}
+  .tbl-scroll{overflow-x:auto}
+  .mono{font-family:var(--mono);font-size:.92em}
+  pre{font-family:var(--mono);font-size:13px;background:var(--panel);border:1px solid var(--rule);padding:14px 18px;overflow-x:auto;margin:14px 0;color:var(--dim);line-height:1.5}
+  a{color:var(--orange);text-decoration:none}
+  a:hover{text-decoration:underline}
+  footer{margin-top:80px;border-top:1px solid var(--rule-strong);padding-top:18px;font-family:var(--mono);font-size:12px;color:var(--faint)}
+  @media print{body{background:#fff}:root{--bone:#111;--dim:#333;--faint:#666;--panel:#f4f4f2;--ink:#fff;--rule:#ddd;--rule-strong:#bbb}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <div class="lockup"><b>CULTURA BUILDER</b><span class="sep"></span><span class="tag">Briefing · Produto (hub)</span><span class="sep"></span><span>17 Agosto 2026</span><span class="sep"></span><a href="/plano.html" style="color:inherit">← plano completo</a></div>
+  <h1>Hub para empresas — spec técnica F0–F4</h1>
+  <p class="lede">O hub hoje é single-player B2C. O pivô exige a camada de empresa: organizações, assentos, áreas, faixas com revisão, Builder Score e painel do sponsor. Esta spec traz modelo de dados, telas e critérios de aceite por fase — varredura completa da API pública em 17/08 confirmou que <em>nenhum</em> desses conceitos existe em produção hoje.</p>
+</header>
+
+<h2><span class="n">F0</span>Acesso e descoberta — bloqueia tudo (esta semana)</h2>
+<p>O código do hub não está com o resto dos repositórios. O que sabemos por fora: Next.js atrás de Cloudflare, identidade via Stack Auth (<span class="mono">/handler/*</span>), vídeo via api.video, pagamentos Stripe + Asaas + Gotas, entitlements concedidos <em>por rota</em> a partir do plano individual (<span class="mono">/api/subscription/plans</span>).</p>
+<p><strong>Perguntas que a call de descoberta precisa responder:</strong></p>
+<ol>
+  <li>Onde está o repo e qual o fluxo de deploy? Acesso de leitura para o time do Método.</li>
+  <li>Schema atual do banco (dump) — especialmente user, subscription, progress, projects, badges.</li>
+  <li>Stack Auth suporta organizações/teams nativamente na versão usada? (Stack Auth tem primitives de teams — se estiverem disponíveis, F1 encurta.)</li>
+  <li>Billing: os planos são escalares hoje; existe caminho para quantidade (assentos) no Stripe/Asaas sem reescrever o checkout?</li>
+  <li>Feature flags / entitlements: como adicionar gate por <em>empresa</em> além do gate por plano individual?</li>
+  <li>Dois SKUs B2B quebrados hoje: R$ 297 sem <span class="mono">allowed_payment_methods</span> e R$ 499,90 expirado em 11/08 sem features — decidir se conserta ou remove do checkout público.</li>
+</ol>
+<div class="callout"><p><strong>Regra inegociável: nenhum segundo login.</strong> A camada de empresa consome a identidade Stack Auth existente. Se F1 nascer como app separado com auth próprio, criamos para sempre o problema de assinante com duas contas. Referência de schema pronta para adaptar: repo <span class="mono">builders-club</span> (companies/users/enrollments/lesson_progress com RLS por empresa) — usar como referência de modelo, não como segunda plataforma.</p></div>
+
+<h2><span class="n">F1</span>Camada de empresa — organizações, assentos, áreas (5–8 dev-dias)</h2>
+<h3>Modelo de dados</h3>
+<pre>companies      id · nome · cnpj · plan · seats_total · sponsor_user_id · created_at
+departments    id · company_id · nome
+               (seed: Comercial, Marketing, Financeiro, RH, Jurídico, Operações, TI, Outro)
+users          + company_id (nullable — B2C segue sem empresa)
+               + department_id (nullable)
+               + org_role: member | org_admin | sponsor
+invites        id · company_id · email · department_id · token · status · expires_at</pre>
+<h3>Telas</h3>
+<ul>
+  <li><strong>Admin CB:</strong> criar empresa, definir assentos, designar sponsor e org_admin (entra no admin existente do hub).</li>
+  <li><strong>Org admin:</strong> convidar por e-mail individual ou CSV; ver assentos usados/livres; tag de área por pessoa.</li>
+  <li><strong>Membro convidado:</strong> aceita via magic link → cai no onboarding existente com <span class="mono">department</span> pré-preenchido.</li>
+</ul>
+<h3>Critérios de aceite</h3>
+<ul>
+  <li>Convite aceito consome 1 assento; assentos esgotados bloqueiam novo convite com mensagem clara ao org_admin.</li>
+  <li><strong>Usuário B2C existente pode ser “adotado” por uma empresa sem perder progresso, faixas ou histórico</strong> (caso real: funcionários de clientes já têm conta PF).</li>
+  <li>Entitlement por empresa: todo assento ativo acessa o conteúdo Premium enquanto o contrato da empresa estiver ativo, independente de assinatura individual.</li>
+  <li>Remover pessoa da empresa devolve o assento e rebaixa o acesso dela para o plano individual que tiver (ou free).</li>
+</ul>
+
+<h2><span class="n">F4</span>Diagnóstico por área — antes de F2/F3 na ordem de build (4–6 dev-dias)</h2>
+<p><em>(Fora de ordem de propósito: destrava vendas e gera o Builder Score Zero — e só depende de F1.)</em></p>
+<h3>Base existente</h3>
+<ul>
+  <li>O hub já tem um motor de onboarding com 164 respostas estruturadas (admin → onboarding-insights). É extensão, não criação.</li>
+  <li>Instrumento por área já validado em cliente real: modelo Klini — por departamento: responsável, tamanho do time, horas perdidas em trabalho manual, sistemas usados, dor 0–12, três quick wins. Motor de pontuação com pesos pronto no repo <span class="mono">builders-club</span> (<span class="mono">diagnostic-engine.ts</span>).</li>
+</ul>
+<h3>Modelo de dados</h3>
+<pre>diagnostic_instances   id · company_id · department_id · respondent_user_id (ou e-mail externo)
+                       · status · created_at
+diagnostic_answers     instance_id · question_id · answer (jsonb)
+diagnostic_questions   + department_scope (null = geral)</pre>
+<h3>Critérios de aceite</h3>
+<ul>
+  <li>Org admin dispara o diagnóstico por área (link por e-mail, sem exigir conta para responder).</li>
+  <li>Saída 1: relatório por empresa consolidado (briefing dos professores + versão para o sponsor).</li>
+  <li>Saída 2: <strong>Builder Score Zero</strong> gravado como primeiro snapshot (ver F3) no D-7 do contrato.</li>
+  <li>Dores por área ficam consultáveis agregadas entre empresas (insumo de playbooks e add-ons) — anonimizadas fora da empresa dona.</li>
+</ul>
+
+<h2><span class="n">F2</span>Faixas + registro de artefatos (8–12 dev-dias)</h2>
+<h3>Base existente — estender, não criar</h3>
+<ul>
+  <li><strong>Builders Projects</strong> (113 projetos) já é submissão com categorias, senioridade e votos → vira o registro de artefatos.</li>
+  <li><strong>Badges por curso + streaks</strong> já existem no perfil → a faixa entra como badge de tipo novo, com regra própria.</li>
+</ul>
+<h3>Modelo de dados</h3>
+<pre>belt_levels    seed das 4 faixas (Operador, Construtor, Builder, Embaixador) + criteria (texto da rubrica)
+artifacts      id · user_id · belt_level_id · title · description · evidence_url
+               · usage_evidence (quem usa, desde quando) · status: submitted|approved|rejected
+               · reviewer_id · feedback · submitted_at · reviewed_at
+belt_awards    IMUTÁVEL: id · user_id · belt_level_id · artifact_id · awarded_at</pre>
+<h3>Fluxo e telas</h3>
+<ul>
+  <li>Submissão: formulário no perfil (título, descrição, link de evidência, evidência de uso). Rubrica visível na própria tela.</li>
+  <li><strong>Fila de revisão:</strong> página para revisores (professores/CB, papel <span class="mono">reviewer</span>) — pendências ordenadas por idade, aprovação/reprovação com feedback obrigatório, <strong>SLA 5 dias úteis</strong> com alerta de estouro.</li>
+  <li>Aprovação → cria <span class="mono">belt_award</span> → badge de faixa no perfil → notificação ao usuário e ao org_admin.</li>
+  <li>Trilhas async com gate por faixa. Mapeamento inicial do catálogo atual (119 aulas): cursos iniciante/primeiro-app → trilha Operador · profissional/intermediário → Construtor · avançado/negócio/Claude Code → Builder.</li>
+</ul>
+<h3>Critérios de aceite</h3>
+<ul>
+  <li>Fluxo completo submissão → revisão → badge funcionando de ponta a ponta, com trilha de auditoria (quem aprovou o quê, quando).</li>
+  <li>Perfil público do membro mostra a faixa (é o selo que ele leva pro LinkedIn — parte do produto).</li>
+  <li>Org admin e sponsor veem as faixas de todos os assentos da empresa, por área.</li>
+  <li>Award é imutável: revogação só por fraude, via registro administrativo separado, nunca deleção.</li>
+</ul>
+
+<h2><span class="n">F3</span>Builder Score + painel do sponsor (5–8 dev-dias)</h2>
+<h3>Modelo de dados</h3>
+<pre>company_score_snapshots   id · company_id · period (semana ISO)
+                          · active_seats_pct        (assentos com login+ação na semana / total)
+                          · artifacts_in_production (belt_awards Builder+ ativos)
+                          · depts_with_build_pct    (áreas com ≥1 build / áreas com assento)
+                          · embaixadores_count
+                          · score (composto v1)
+                          · created_at</pre>
+<p><strong>Fórmula v1</strong> (ajustável, versionada): <span class="mono">score = 40%·assentos_ativos + 30%·áreas_com_build + 20%·builds_em_produção(normalizado) + 10%·embaixadores</span>. Job semanal agendado. <strong>Snapshots desde o primeiro dia — nunca só o valor atual</strong>: o produto de renovação é a curva D0 → D365, e sem histórico ela não existe.</p>
+<h3>Painel do sponsor</h3>
+<ul>
+  <li>Rota read-only por empresa (papel <span class="mono">sponsor</span>): score atual + tendência, quebra por área, lista de builds em produção (título, área, impacto declarado), nº de pessoas por faixa, próximos marcos da temporada.</li>
+  <li>Export em PDF (vira anexo do relatório trimestral do Success).</li>
+  <li>Protótipos de referência prontos nos repos locais: <span class="mono">builders-club</span> (admin/empresas/[id] — visão por área com dores) e <span class="mono">enterprise-ai-academy</span> (conclusão por departamento, colaborador em risco).</li>
+</ul>
+<h3>Critérios de aceite</h3>
+<ul>
+  <li>Snapshot semanal gerado automaticamente para toda empresa ativa; falha do job alerta o time.</li>
+  <li>Sponsor enxerga apenas a própria empresa; dados individuais além de faixa/atividade agregada não vazam (assiduidade individual é sensível — mostrar por área, não por pessoa, exceto para org_admin).</li>
+  <li>Builder Score Zero (do F4) aparece como primeiro ponto da curva.</li>
+</ul>
+
+<h2><span class="n">+</span>Backlog paralelo (fora das fases, quando couber)</h2>
+<ul>
+  <li><strong>Billing por assento:</strong> hoje os planos são preços escalares; o contrato B2B precisa de quantidade (15 assentos ref.). Curto prazo: cobrar fora do hub (fatura) e provisionar assentos manualmente via F1; médio prazo: quantity no gateway.</li>
+  <li><strong>Conta de serviço para o publisher do feed</strong> (hoje o bot posta como a conta pessoal/admin — item de segurança já reportado).</li>
+  <li>Correções cosméticas com cara de quebrado: © 2025 no rodapé, timer de escassez marcando 704 dias.</li>
+  <li>SKUs B2B quebrados: decidir consertar ou remover (ver F0.6).</li>
+  <li>API de leitura para o Score (futuro: alimentar relatórios e a página do sponsor externa sem scraping).</li>
+</ul>
+
+<h2><span class="n">→</span>Sequência, estimativa e riscos</h2>
+<div class="tbl-scroll"><table>
+  <tr><th>Ordem</th><th>Fase</th><th>Estimativa</th><th>Por quê nessa ordem</th></tr>
+  <tr><td>1</td><td>F0 descoberta</td><td>2–3 dias + calendário externo</td><td>Bloqueia tudo; risco de agenda, não de engenharia</td></tr>
+  <tr><td>2</td><td>F1 camada de empresa</td><td>5–8 dias</td><td>Base de todo o resto</td></tr>
+  <tr><td>3</td><td>F4 diagnóstico</td><td>4–6 dias</td><td>Destrava vendas + Score Zero; só depende de F1</td></tr>
+  <tr><td>4</td><td>F2 faixas</td><td>8–12 dias</td><td>Maior fase; revisão humana com SLA é workflow, não barra de progresso</td></tr>
+  <tr><td>5</td><td>F3 score + sponsor</td><td>5–8 dias</td><td>Precisa de F2 (conta artefatos); até lá o relatório do sponsor sai manual</td></tr>
+</table></div>
+<p><strong>Total: 22–34 dev-dias após F0.</strong> Riscos principais: (1) plataforma dupla — qualquer atalho “fora do hub com login próprio” é dívida permanente; (2) identidade/billing do hub terem acoplamentos não visíveis por fora — por isso F0 vem antes de qualquer estimativa virar compromisso; (3) fila de revisão sem dono vira gargalo — o SLA é de gente, não de código (dono: Head de Success).</p>
+
+<h2><span class="n">?</span>O que precisamos de volta esta semana</h2>
+<ol>
+  <li>Acesso de leitura ao repo + dump do schema</li>
+  <li>Call de 1h: identidade (Stack Auth teams?), billing (quantity?), entitlements por empresa</li>
+  <li>Sua leitura sobre onde F1 encaixa na arquitetura atual + correção das estimativas acima</li>
+  <li>Decisão sobre os 2 SKUs B2B quebrados</li>
+</ol>
+
+<footer>CULTURA BUILDER · BRIEFING PRODUTO · INTERNO · 17.08.2026 — achados da auditoria de API e código da mesma data · plano completo: metodo.brunopessoa.com/plano.html</footer>
+</div>
+</body>
+</html>

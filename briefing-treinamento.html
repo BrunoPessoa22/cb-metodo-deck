@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Briefing Treinamento — Método Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0C0D0E; --panel:#131416; --bone:#F4F5F1; --orange:#F4632F;
+    --dim:rgba(244,245,241,.80); --faint:rgba(244,245,241,.56);
+    --rule:rgba(244,245,241,.14); --rule-strong:rgba(244,245,241,.28);
+    --sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--bone);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 28px 120px}
+  header.doc{border-bottom:1px solid var(--rule-strong);padding-bottom:28px;margin-bottom:40px}
+  .lockup{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
+  .lockup b{color:var(--bone);font-weight:500}
+  .lockup .sep{width:1px;height:13px;background:var(--rule-strong)}
+  .lockup .tag{color:var(--orange)}
+  h1{font-size:clamp(30px,4.6vw,46px);line-height:1.06;font-weight:650;letter-spacing:-.02em;max-width:24ch}
+  .lede{margin-top:14px;font-size:18px;color:var(--dim);max-width:64ch}
+  h2{font-size:clamp(22px,2.8vw,28px);font-weight:650;letter-spacing:-.015em;margin:64px 0 8px;scroll-margin-top:24px}
+  h2 .n{font-family:var(--mono);font-size:.6em;color:var(--orange);letter-spacing:.08em;vertical-align:.35em;margin-right:10px}
+  h3{font-size:18px;font-weight:600;margin:30px 0 6px}
+  p{margin:12px 0;color:var(--dim);max-width:74ch}
+  p strong, li strong, td strong{color:var(--bone);font-weight:600}
+  ul,ol{margin:12px 0 12px 22px;color:var(--dim)}
+  li{margin:7px 0;max-width:72ch}
+  em{color:var(--bone);font-style:normal;font-weight:500}
+  .callout{border-left:3px solid var(--orange);background:var(--panel);padding:16px 20px;margin:20px 0;max-width:78ch}
+  .callout p{margin:6px 0}
+  table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 12px 8px 0;border-bottom:1px solid var(--rule-strong)}
+  td{padding:10px 12px 10px 0;border-bottom:1px solid var(--rule);color:var(--dim);vertical-align:top}
+  td:first-child{color:var(--bone)}
+  .tbl-scroll{overflow-x:auto}
+  .mono{font-family:var(--mono);font-size:.92em}
+  a{color:var(--orange);text-decoration:none}
+  a:hover{text-decoration:underline}
+  footer{margin-top:80px;border-top:1px solid var(--rule-strong);padding-top:18px;font-family:var(--mono);font-size:12px;color:var(--faint)}
+  @media print{body{background:#fff}:root{--bone:#111;--dim:#333;--faint:#666;--panel:#f4f4f2;--ink:#fff;--rule:#ddd;--rule-strong:#bbb}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <div class="lockup"><b>CULTURA BUILDER</b><span class="sep"></span><span class="tag">Briefing · Treinamento &amp; Comunidade</span><span class="sep"></span><span>17 Agosto 2026</span><span class="sep"></span><a href="/plano.html" style="color:inherit">← plano completo</a></div>
+  <h1>O novo Método Builder na operação de treinamento</h1>
+  <p class="lede">Tudo que muda na entrega: faixas com rubrica, Fundação em dois trilhos coletivos, liturgia fixa do Builders Club, Temporada 1 e a certificação de professores externos. Este documento é o manual de transição — o que preparar, como avaliar, o que entregar nas próximas duas semanas.</p>
+</header>
+
+<h2><span class="n">01</span>O que muda em uma frase</h2>
+<div class="callout"><p>Saímos de <em>“agendar aulas para cada empresa”</em> para <em>uma máquina de calendário fixo</em>: turma mensal de Fundação em dois trilhos, temporada trimestral com liturgia fixa, e progressão individual por <strong>artefato entregue</strong> — nunca por presença.</p></div>
+<p>O que <strong>não</strong> muda: o diagnóstico por área antes de começar (segue sendo como os professores entendem o negócio do cliente) e a qualidade de aula ao vivo que já é nossa marca. O diagnóstico só ganha função dupla: além de briefing dos professores, vira a linha de base do Builder Score da empresa.</p>
+
+<h2><span class="n">02</span>As quatro faixas — rubrica de avaliação</h2>
+<p>A faixa é o coração do Método: é o que resolve a entrada de empresas em momentos diferentes (quem chega depois não “perdeu aula” — começa a primeira faixa) e é o que vendemos para o sponsor como progresso mensurável. <strong>A rubrica abaixo é o padrão único.</strong> Revisão com SLA de 5 dias úteis; reprovação sempre com feedback do que falta.</p>
+
+<div class="tbl-scroll"><table>
+  <tr><th>Faixa</th><th>Definição</th><th>Evidência exigida</th><th>Quem aprova</th></tr>
+  <tr><td><strong>1 · Operador</strong></td><td>Automatizou o próprio trabalho</td><td>Demo gravada (≤ 3 min) + descrição antes/depois + em uso real há ≥ 2 semanas</td><td>Professor da turma</td></tr>
+  <tr><td><strong>2 · Construtor</strong></td><td>Alguém do time usa o que ele construiu</td><td>Ferramenta demonstrada + confirmação do colega usuário + registro de uso (print/log)</td><td>Professor ou Embaixador</td></tr>
+  <tr><td><strong>3 · Builder</strong></td><td>Ferramenta da área em produção, com impacto medido</td><td>Métrica de impacto (horas/semana ou R$) validada por escrito pelo gestor da área</td><td>Cultura Builder (Head de Success)</td></tr>
+  <tr><td><strong>4 · Embaixador</strong></td><td>Forma e certifica os próximos</td><td>≥ 3 colegas levados até Operador + 1 clínica de build facilitada</td><td>Cultura Builder</td></tr>
+</table></div>
+<p><strong>Regras:</strong> faixa é da pessoa (vale se ela trocar de empresa); não há prazo mínimo entre faixas; artefato reprovado pode ser resubmetido sem limite; nunca conceder faixa por participação, cargo ou pedido do sponsor — o selo só vale enquanto for verificado.</p>
+
+<h2><span class="n">03</span>Fundação — dois trilhos coletivos (fim das 4 aulas por empresa)</h2>
+<p>Turma mensal, entrada de várias empresas juntas, <strong>máximo 8 empresas por turma</strong>. Cada participante é colocado num dos dois trilhos pelo diagnóstico individual (5 perguntas de proficiência respondidas no D-7). Na dúvida, Fundamentos. Sessões quinzenais de 2h, sempre no mesmo horário. <em>Toda sessão termina com artefato.</em></p>
+
+<h3>Trilho Fundamentos (não-técnico)</h3>
+<div class="tbl-scroll"><table>
+  <tr><th>Sessão</th><th>Conteúdo</th><th>Artefato de saída</th></tr>
+  <tr><td>S1</td><td>Mentalidade builder + mapa do próprio trabalho</td><td>Lista das 5 tarefas mais repetitivas + primeira automação com agente rodando</td></tr>
+  <tr><td>S2</td><td>Engenharia de contexto aplicada à função</td><td>Biblioteca pessoal de 3 prompts/contextos testados no trabalho real</td></tr>
+  <tr><td>S3</td><td>Automação do fluxo mais doloroso (e-mail, planilha, relatório, atendimento)</td><td>Automação funcionando de ponta a ponta</td></tr>
+  <tr><td>S4</td><td>Demo day interno da turma</td><td>Demo de 3 min gravada → submissão para faixa Operador</td></tr>
+</table></div>
+
+<h3>Trilho Avançado (já usa IA / perfil técnico)</h3>
+<div class="tbl-scroll"><table>
+  <tr><th>Sessão</th><th>Conteúdo</th><th>Artefato de saída</th></tr>
+  <tr><td>S1</td><td>Stack builder: CLI, agentes, MCP (instala o Builder AI na aula)</td><td>Ambiente rodando + primeiro agente próprio</td></tr>
+  <tr><td>S2</td><td>Do uso pessoal à ferramenta do time</td><td>Spec de 1 página + protótipo navegável</td></tr>
+  <tr><td>S3</td><td>Dados e integrações da empresa</td><td>Ferramenta conectada a dado real da empresa</td></tr>
+  <tr><td>S4</td><td>Demo day interno da turma</td><td>Ferramenta usada por ≥ 1 colega → caminho direto para Construtor</td></tr>
+</table></div>
+<p><strong>Fonte de conteúdo:</strong> o catálogo atual (119 aulas) cobre ~80% do Avançado. O gap de produção real é o Fundamentos — 8 a 10 vídeos novos de apoio async, linguagem zero-jargão. Não produzir mais conteúdo técnico: já temos.</p>
+
+<h2><span class="n">04</span>Builders Club — a liturgia fixa (roteiro de 70 min)</h2>
+<div class="tbl-scroll"><table>
+  <tr><th>Bloco</th><th>Tempo</th><th>O que acontece</th><th>Responsável</th></tr>
+  <tr><td>Demos de membros</td><td>00–20</td><td>2 demos de 10 min: <strong>1 veterano + 1 recém-chegado</strong> (o veterano mostra o teto, o novato mostra que é possível). Agenda fechada com 1 semana de antecedência</td><td>Curadoria: comunidade</td></tr>
+  <tr><td>Masterclass</td><td>20–50</td><td>Tema da temporada; convidado ou founder</td><td>Program manager (interino: Caio)</td></tr>
+  <tr><td>Clínica de build</td><td>50–70</td><td>Breakouts <em>por faixa</em> — cada sala resolve os builds travados do nível dela</td><td>Facilitadores: Embaixadores + professores</td></tr>
+</table></div>
+<ul>
+  <li><strong>Checklist pré-sessão:</strong> demos confirmadas e ensaiadas (5 min de ensaio cada) · masterclass com título e 1 takeaway anunciados · salas de breakout mapeadas por faixa · gravação testada.</li>
+  <li><strong>Pós-sessão (até 24h):</strong> gravação no hub · pulso de 2 perguntas disparado no WhatsApp · demos viram candidatas a reel (mandar corte pro time de conteúdo).</li>
+  <li><strong>Temporadas trimestrais:</strong> empresa entra em qualquer temporada; 4 temporadas fecham o ciclo completo. Sem sessão “solta” fora do esqueleto — a previsibilidade é o produto.</li>
+</ul>
+
+<h2><span class="n">05</span>Temporada 1 — “Automatize o seu trabalho” (Set–Nov)</h2>
+<div class="tbl-scroll"><table>
+  <tr><th>Mês</th><th>Entregas do time</th></tr>
+  <tr><td><strong>Setembro</strong></td><td>Abertura da T1 · Turma 1 da Fundação (dois trilhos) · <strong>retrofit dos clientes atuais</strong>: rodar a rubrica de faixa em cada assento ativo de Klini, Hospital Casa, Eatopia e THC (sessão de reclassificação por cliente) · 2 primeiros encontros do Club</td></tr>
+  <tr><td><strong>Outubro</strong></td><td>Turma 2 · encontros 3–4 · primeira masterclass com convidado da comunidade (candidato: especialista de marketing já mapeado) · playbook Comercial/Vendas publicado</td></tr>
+  <tr><td><strong>Novembro</strong></td><td>Turma 3 · encontros 5–6 · demo day aberto (vitrine para prospects B2B) · playbooks Marketing e Atendimento publicados · primeira turma com professor externo co-entregando</td></tr>
+</table></div>
+<p><strong>Formato fixo de playbook de área</strong> (1 por mês, 12 no ano): 4 vídeos curtos (≤ 10 min) + 3 templates de agente/prompt prontos + 1 caso real de cliente (autorizado por escrito) + 1 checklist de implantação. O conteúdo nasce do diagnóstico: as dores mais recorrentes da área viram o roteiro.</p>
+
+<h2><span class="n">06</span>Certificação de professores externos</h2>
+<p>Objetivo: tirar os fundadores da Fundação até janeiro. Fonte de candidatos: a própria comunidade (8.000+), Embaixadores de clientes e os operadores setoriais.</p>
+<div class="tbl-scroll"><table>
+  <tr><th>Etapa</th><th>O que é</th><th>Critério de passagem</th></tr>
+  <tr><td>1 · Candidatura</td><td>Perfil: faixa Builder+ (ou equivalente comprovado), didática, disponibilidade para 2 turmas/trimestre</td><td>Triagem pelo time + entrevista</td></tr>
+  <tr><td>2 · Certificação</td><td>Curso do canon (método, rubrica, liturgia) + shadow em 1 turma completa</td><td>Presença 100% no shadow + prova do canon</td></tr>
+  <tr><td>3 · Co-entrega</td><td>Entrega 2 sessões com professor titular assistindo</td><td>Avaliação do titular + pulso da turma ≥ 4/5</td></tr>
+  <tr><td>4 · Titularidade</td><td>Assume turmas próprias</td><td>Score da turma sustenta o certificado; 2 turmas ruins seguidas = reciclagem</td></tr>
+</table></div>
+<p>Remuneração: R$ 2,5–4k por turma entregue + bônus por score · masterclass R$ 1–3k. A certificação é paga pelo professor (R$ 3–5k) — quem ensina investe para entrar. <strong>Meta: 2–3 certificados até novembro; primeira turma 100% externa em janeiro.</strong></p>
+
+<h2><span class="n">07</span>Medição — o que o time acompanha por turma e por temporada</h2>
+<ul>
+  <li><strong>Taxa de artefato entregue</strong> por sessão (meta ≥ 80%) — é o indicador nº 1; presença sem artefato é falha nossa, não do aluno</li>
+  <li>Pulso de 2 perguntas pós-sessão (automatizado via WhatsApp) + NPS por turma</li>
+  <li>Assentos ativos por semana, por empresa (alimenta o Builder Score)</li>
+  <li>Tempo médio até faixa Operador (meta: ≤ 45 dias do D0)</li>
+  <li>Fila de revisão de artefatos dentro do SLA de 5 dias úteis</li>
+</ul>
+
+<h2><span class="n">08</span>Entregas do time nas próximas 2 semanas</h2>
+<ol>
+  <li>Datas fechadas da Temporada 1 (6 encontros) e da Turma 1 de setembro — publicadas no calendário fixo</li>
+  <li>Rubrica das faixas (seção 02) formatada e publicada para os alunos</li>
+  <li>Curadoria das 2 demos do primeiro encontro (1 veterano + 1 novato) confirmada</li>
+  <li>Agenda de retrofit com os 4 clientes atuais marcada</li>
+  <li>Lista de 10 candidatos a professor externo (com o especialista de marketing entre os convidados de masterclass)</li>
+  <li>Template do pulso pós-sessão (2 perguntas) pronto para automação</li>
+</ol>
+
+<footer>CULTURA BUILDER · BRIEFING TREINAMENTO · INTERNO · 17.08.2026 — deck do Método: metodo.brunopessoa.com · plano completo: /plano.html</footer>
+</div>
+</body>
+</html>
