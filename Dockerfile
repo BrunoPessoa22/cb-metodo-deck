@@ -2,6 +2,8 @@ FROM nginx:alpine
 COPY index.html /usr/share/nginx/html/index.html
 COPY plano.html /usr/share/nginx/html/plano.html
 COPY pivo.html /usr/share/nginx/html/pivo.html
+COPY visao.html /usr/share/nginx/html/visao.html
+COPY nova-fase.pdf /usr/share/nginx/html/nova-fase.pdf
 COPY briefing-financeiro.html /usr/share/nginx/html/briefing-financeiro.html
 COPY briefing-treinamento.html /usr/share/nginx/html/briefing-treinamento.html
 COPY briefing-produto.html /usr/share/nginx/html/briefing-produto.html

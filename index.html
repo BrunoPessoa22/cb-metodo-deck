@@ -455,12 +455,6 @@
   function show(n,push){
     cur=clamp(n);
     slides.forEach(function(s,i){s.classList.toggle('active',i===cur);});
-    slides.forEach(function(s,i){
-      var bp=s.querySelector('.belt-progress i');
-      if(bp)bp.style.width=(((cur+1)/total)*100)+'%';
-      var c=s.querySelector('.count');
-      if(c)c.textContent=pad(cur+1)+' / '+pad(total);
-    });
     if(push!==false)history.replaceState(null,'','#'+(cur+1));
   }
 
