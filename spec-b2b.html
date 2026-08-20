@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Spec — Hub Cultura Builder: camada B2B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0C0D0E; --panel:#131416; --bone:#F4F5F1; --orange:#F4632F;
+    --dim:rgba(244,245,241,.80); --faint:rgba(244,245,241,.56);
+    --rule:rgba(244,245,241,.14); --rule-strong:rgba(244,245,241,.28);
+    --sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--bone);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:48px 28px 120px}
+  header.doc{border-bottom:1px solid var(--rule-strong);padding-bottom:28px;margin-bottom:8px}
+  .lockup{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
+  .lockup b{color:var(--bone);font-weight:500}
+  .lockup .sep{width:1px;height:13px;background:var(--rule-strong)}
+  .lockup .tag{color:var(--orange)}
+  h1{font-size:clamp(30px,4.6vw,46px);line-height:1.06;font-weight:650;letter-spacing:-.02em;max-width:26ch}
+  .lede{margin-top:14px;font-size:18px;color:var(--dim);max-width:66ch}
+  .toc{margin:34px 0 0;border:1px solid var(--rule);background:var(--panel);padding:18px 22px}
+  .toc h4{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:500;margin-bottom:10px}
+  .toc ol{margin:0 0 0 18px;color:var(--dim);font-size:14px;columns:2;column-gap:34px}
+  .toc li{margin:4px 0;break-inside:avoid}
+  h2{font-size:clamp(21px,2.6vw,27px);font-weight:650;letter-spacing:-.015em;margin:64px 0 8px;padding-top:18px;border-top:1px solid var(--rule);scroll-margin-top:24px}
+  h3{font-size:18px;font-weight:600;margin:34px 0 4px}
+  h4{font-size:15px;font-weight:600;margin:22px 0 2px;color:var(--bone)}
+  p{margin:12px 0;color:var(--dim);max-width:76ch}
+  p strong, li strong, td strong{color:var(--bone);font-weight:600}
+  ul,ol{margin:12px 0 12px 22px;color:var(--dim)}
+  li{margin:7px 0;max-width:74ch}
+  blockquote{border-left:3px solid var(--orange);background:var(--panel);padding:14px 20px;margin:20px 0;max-width:80ch}
+  blockquote p{margin:5px 0}
+  table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 14px 8px 0;border-bottom:1px solid var(--rule-strong);font-weight:500}
+  td{padding:10px 14px 10px 0;border-bottom:1px solid var(--rule);color:var(--dim);vertical-align:top}
+  td:first-child{color:var(--bone)}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  code{font-family:var(--mono);font-size:.9em;color:var(--bone);background:rgba(244,245,241,.07);padding:1px 5px}
+  pre{font-family:var(--mono);font-size:12.5px;background:var(--panel);border:1px solid var(--rule);padding:16px 18px;overflow-x:auto;margin:16px 0;color:var(--dim);line-height:1.55}
+  pre code{background:none;padding:0;color:var(--dim);font-size:inherit}
+  a{color:var(--orange);text-decoration:none}
+  a:hover{text-decoration:underline}
+  ul.task-list{list-style:none;margin-left:2px}
+  ul.task-list li{position:relative;padding-left:26px}
+  ul.task-list input[type=checkbox]{position:absolute;left:0;top:5px;appearance:none;width:14px;height:14px;border:1px solid var(--rule-strong);background:transparent}
+  hr{border:0;border-top:1px solid var(--rule);margin:44px 0}
+  footer{margin-top:80px;border-top:1px solid var(--rule-strong);padding-top:18px;font-family:var(--mono);font-size:12px;color:var(--faint);line-height:1.7}
+  @media (max-width:680px){.toc ol{columns:1}}
+  @media print{body{background:#fff}:root{--bone:#111;--dim:#333;--faint:#666;--panel:#f4f4f2;--ink:#fff;--rule:#ddd;--rule-strong:#bbb}.wrap{padding:0}h2{page-break-after:avoid}pre,table{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <div class="lockup"><b>CULTURA BUILDER</b><span class="sep"></span><span class="tag">Spec de implementação · hub</span><span class="sep"></span><span>20 Agosto 2026</span><span class="sep"></span><a href="/briefing-produto.html" style="color:inherit">← briefing anterior</a></div>
+  <h1>Hub Cultura Builder — camada B2B</h1>
+  <p class="lede">O que precisa ser construído para a empresa existir dentro do produto: onboarding self-service do time, identidade completa do usuário, progressão por construção (o &ldquo;Strava do build&rdquo;), painel da empresa, clusterização no admin e feed com escopo. Modelo de dados, telas, endpoints e critérios de aceite por módulo.</p>
+  
+<div class="toc">
+  <h4>Neste documento</h4>
+  <ol start="0">
+    <li><a href="#como-usar-este-documento">Como usar / princípios inegociáveis</a></li>
+    <li><a href="#o-que-estamos-construindo">O que estamos construindo</a></li>
+    <li><a href="#modelo-de-dados-base">Modelo de dados (base)</a></li>
+    <li><a href="#módulo-1-onboarding-de-empresa-prioridade-1">M1 — Onboarding de empresa</a></li>
+    <li><a href="#módulo-2-identidade-do-usuário">M2 — Identidade do usuário</a></li>
+    <li><a href="#módulo-3-progressão-o-strava-do-build">M3 — Progressão (Strava do build)</a></li>
+    <li><a href="#módulo-4-painel-da-empresa">M4 — Painel da empresa</a></li>
+    <li><a href="#módulo-5-admin-cb-clusterização-e-audiências">M5 — Admin CB e audiências</a></li>
+    <li><a href="#módulo-6-feed-com-escopo-comunidade-canal-da-empresa">M6 — Feed com escopo</a></li>
+    <li><a href="#permissões-e-privacidade">Permissões e privacidade</a></li>
+    <li><a href="#backlog-recomendado-depois-do-núcleo-em-ordem-de-valor">Backlog recomendado</a></li>
+    <li><a href="#ordem-de-implementação">Ordem de implementação</a></li>
+    <li><a href="#perguntas-que-precisamos-responder-na-primeira-call">Perguntas para a primeira call</a></li>
+  </ol>
+</div>
+
+</header>
+
+<h2 id="como-usar-este-documento">0. Como usar este documento</h2>
+<p>Este documento descreve <strong>o que</strong> precisa existir e <strong>por quê</strong>, com modelo de dados, telas, endpoints e critérios de aceite. Ele <strong>não</strong> conhece o schema real do hub — foi escrito a partir da API pública (<code>/api/subscription/plans</code>, <code>/api/aulas</code>, <code>/api/challenger/projects</code>) e do que já está em produção. Sempre que houver conflito entre o que está aqui e o que existe no código, <strong>o código ganha</strong>: a regra é adaptar nomes/tipos ao que já existe, não criar estrutura paralela.</p>
+<p>Sequência sugerida para o agente de código:</p>
+<ol type="1">
+<li>Ler o repositório e produzir um <strong>mapa do que já existe</strong> para cada conceito deste documento (usuário, progresso de aula, projeto/challenger, badges, onboarding, admin, notificações, billing).</li>
+<li>Devolver um <strong>plano de migração</strong> (tabelas novas x colunas em tabelas existentes) antes de escrever código.</li>
+<li>Implementar <strong>um módulo por PR</strong>, na ordem da seção 11, cada um atrás de feature flag.</li>
+<li>Cada PR entrega: migration + endpoints + tela + seed de teste + os critérios de aceite marcados.</li>
+</ol>
+<h3 id="princípios-inegociáveis">Princípios inegociáveis</h3>
+<div class="tbl-scroll"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Princípio</th>
+<th>Consequência prática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Nenhum segundo login</strong></td>
+<td>A camada de empresa consome a identidade que já existe (Stack Auth). Nada de app separado com auth próprio — isso cria para sempre o problema do usuário com duas contas.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Estender, nunca duplicar</strong></td>
+<td>Builders Projects vira registro de builds. Badges viram faixas. O motor de onboarding vira o perfil. O admin atual recebe as novas abas.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>B2C continua funcionando</strong></td>
+<td>Todo campo de empresa é <em>nullable</em>. Usuário sem empresa não pode perceber diferença nenhuma.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Todo evento relevante vira registro</strong></td>
+<td>Progressão, painel da empresa, admin e score leem do <strong>mesmo ledger de eventos</strong>. Nada de contador denormalizado como fonte da verdade.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Adoção, não recriação de conta</strong></td>
+<td>Funcionário que já tem conta pessoal no hub é vinculado à empresa <strong>sem perder progresso, faixa ou histórico</strong>.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Dado individual é sensível</strong></td>
+<td>Assiduidade por pessoa: só admin da própria empresa e CB. Sponsor vê agregado por área. Ver seção 9.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Número não medido não aparece</strong></td>
+<td>Se o hub não mede, o painel não exibe. Sem placeholder, sem estimativa inventada.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="o-que-estamos-construindo">1. O que estamos construindo</h2>
+<p>O hub hoje é <strong>single-player B2C</strong>: pessoa entra, assina, assiste aula, publica projeto. A venda B2B já acontece fora do produto — contrato fechado, e a equipe <strong>cria e libera cada membro na mão</strong>. Isso não escala e, pior, o contrato não existe dentro do produto: não há empresa, não há assento, não há visão do patrocinador.</p>
+<p>A camada B2B adiciona seis coisas:</p>
+<ol type="1">
+<li><strong>Onboarding de empresa self-service</strong> — a empresa cadastra o próprio time (a prioridade número 1 deste documento).</li>
+<li><strong>Identidade completa do usuário</strong> — quem é, de que empresa, que área, que cargo, que senioridade, que nível.</li>
+<li><strong>Progressão gamificada por construção</strong> — o “Strava do build”: a pessoa sobe de nível ao <em>entregar</em>, não ao assistir.</li>
+<li><strong>Painel da empresa</strong> — o dono do contrato vê quem está evoluindo e quem não está.</li>
+<li><strong>Admin CB com clusterização</strong> — filtrar a base inteira por nível/área/cargo/empresa para produzir conteúdo e turmas por segmento.</li>
+<li><strong>Feed com escopo</strong> — post visível para todo mundo ou só para a empresa.</li>
+</ol>
+<hr />
+<h2 id="modelo-de-dados-base">2. Modelo de dados (base)</h2>
+<p>Postgres. Nomes sugeridos; adaptar à convenção do repositório. <code>user_id</code> referencia o identificador de usuário já usado pelo hub (aparentemente UUID de texto, conforme <code>ownerId</code> em <code>/api/challenger/projects</code>).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- 2.1 Empresa e estrutura</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> companies (</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>                bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  name              text <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  legal_name        text,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  cnpj              text <span class="kw">unique</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  logo_url          text,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  industry          text,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  size_band         text,                    <span class="co">-- &#39;1-10&#39;,&#39;11-50&#39;,&#39;51-200&#39;,&#39;201-1000&#39;,&#39;1000+&#39;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  seats_total       <span class="dt">int</span>  <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="dv">0</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  contract_start    <span class="dt">date</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  contract_end      <span class="dt">date</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  status            text <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;active&#39;</span>,   <span class="co">-- active | paused | churned | trial</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  sponsor_user_id   text,                    <span class="co">-- dono do contrato (visão read-only)</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  success_owner_id  text,                    <span class="co">-- responsável CB pela conta</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  settings          jsonb <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;{}&#39;</span>:<span class="ch">:jsonb</span>,  <span class="co">-- flags: feed_enabled, ranking_enabled, ...</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  created_at        timestamptz <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> now()</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> company_email_domains (          <span class="co">-- domínios que a empresa reivindica</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>          bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  company_id  bigint <span class="kw">not</span> <span class="kw">null</span> <span class="kw">references</span> companies(<span class="kw">id</span>) <span class="kw">on</span> <span class="kw">delete</span> <span class="kw">cascade</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">domain</span>      text <span class="kw">not</span> <span class="kw">null</span>,                 <span class="co">-- &#39;empresa.com.br&#39;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  auto_join   <span class="dt">boolean</span> <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="kw">false</span>,<span class="co">-- entrada automática por domínio</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  verified_at timestamptz,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">unique</span> (<span class="kw">domain</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> departments (</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>          bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  company_id  bigint <span class="kw">not</span> <span class="kw">null</span> <span class="kw">references</span> companies(<span class="kw">id</span>) <span class="kw">on</span> <span class="kw">delete</span> <span class="kw">cascade</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  name        text <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  lead_user_id text,                          <span class="co">-- líder da área (mini-painel)</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">unique</span> (company_id, name)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">-- seed padrão por empresa (editável no wizard):</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">-- Comercial, Marketing, Financeiro, RH, Jurídico, Operações, TI/Produto, Atendimento, Diretoria, Outro</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">-- 2.2 Vínculo pessoa &lt;-&gt; empresa (tabela, não coluna: a pessoa pode trocar de empresa)</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> company_members (</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>             bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  company_id     bigint <span class="kw">not</span> <span class="kw">null</span> <span class="kw">references</span> companies(<span class="kw">id</span>) <span class="kw">on</span> <span class="kw">delete</span> <span class="kw">cascade</span>,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  user_id        text <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  department_id  bigint <span class="kw">references</span> departments(<span class="kw">id</span>) <span class="kw">on</span> <span class="kw">delete</span> <span class="kw">set</span> <span class="kw">null</span>,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  org_role       text <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;member&#39;</span>,  <span class="co">-- member | org_admin | sponsor | lead</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  job_title      text,                            <span class="co">-- cargo livre: &quot;Analista de Marketing Pleno&quot;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  job_family     text,                            <span class="co">-- enum normalizado, ver 4.1</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  seniority      text,                            <span class="co">-- enum, ver 4.1</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  manager_user_id text,</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  status         text <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;active&#39;</span>,  <span class="co">-- invited | active | suspended | removed</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  seat_consumed  <span class="dt">boolean</span> <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="kw">true</span>,</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  joined_at      timestamptz,</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  removed_at     timestamptz,</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  <span class="kw">unique</span> (company_id, user_id)</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">index</span> <span class="kw">on</span> company_members (user_id) <span class="kw">where</span> status <span class="op">=</span> <span class="st">&#39;active&#39;</span>;</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co">-- 2.3 Convites</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> company_invites (</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>             bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  company_id     bigint <span class="kw">not</span> <span class="kw">null</span> <span class="kw">references</span> companies(<span class="kw">id</span>) <span class="kw">on</span> <span class="kw">delete</span> <span class="kw">cascade</span>,</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  email          citext <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  name           text,</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  department_id  bigint <span class="kw">references</span> departments(<span class="kw">id</span>),</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  job_title      text,</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  job_family     text,</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  seniority      text,</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>  manager_email  citext,</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>  org_role       text <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;member&#39;</span>,</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  token          text <span class="kw">not</span> <span class="kw">null</span> <span class="kw">unique</span>,</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  status         text <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;pending&#39;</span>, <span class="co">-- pending|accepted|expired|revoked|bounced</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  batch_id       uuid,                            <span class="co">-- agrupa um CSV/lote</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  invited_by     text,</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  reminders_sent <span class="dt">int</span> <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="dv">0</span>,</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  expires_at     timestamptz <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>  accepted_at    timestamptz,</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>  accepted_user_id text,</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>  created_at     timestamptz <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> now(),</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>  <span class="kw">unique</span> (company_id, email) <span class="kw">where</span> status <span class="kw">in</span> (<span class="st">&#39;pending&#39;</span>,<span class="st">&#39;accepted&#39;</span>)</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="co">-- 2.4 Entitlement por empresa (acesso ao conteúdo pelo contrato, não pela assinatura pessoal)</span></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> company_entitlements (</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>          bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>  company_id  bigint <span class="kw">not</span> <span class="kw">null</span> <span class="kw">references</span> companies(<span class="kw">id</span>) <span class="kw">on</span> <span class="kw">delete</span> <span class="kw">cascade</span>,</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>  feature_slug text <span class="kw">not</span> <span class="kw">null</span>,      <span class="co">-- reaproveitar os slugs de `features` já existentes nos planos</span></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>  starts_at   timestamptz <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> now(),</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>  ends_at     timestamptz,</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>  <span class="kw">unique</span> (company_id, feature_slug)</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<p><strong>Resolução de acesso (regra única, um só lugar no código):</strong></p>
+<pre><code>acesso(user, feature) =
+     entitlement_individual(user, feature)                       -- plano pessoal atual
+  OR entitlement_da_empresa(company_ativa(user), feature)        -- contrato B2B vigente</code></pre>
+<p>Nunca duplicar essa regra em rota/middleware/componente: um helper <code>hasFeature(userId, slug)</code> e todo mundo chama ele.</p>
+<hr />
+<h2 id="módulo-1-onboarding-de-empresa-prioridade-1">3. Módulo 1 — Onboarding de empresa (prioridade 1)</h2>
+<p><strong>Problema hoje:</strong> vendemos, e a equipe cria/libera cada pessoa manualmente, uma por uma. <strong>Objetivo:</strong> a empresa cadastra o próprio time em uma sessão de 10 minutos, e a CB só acompanha.</p>
+<h3 id="fluxo-completo">3.1 Fluxo completo</h3>
+<p><strong>Passo 0 — CB cria a conta da empresa</strong> (admin do hub, 2 minutos) Nome, CNPJ, plano, nº de assentos, vigência, domínios de e-mail, quem é o sponsor, quem é o org_admin, features do contrato. Gera um <strong>link de setup</strong> (magic link, validade 14 dias) enviado ao org_admin.</p>
+<p><strong>Passo 1 — Wizard de setup da empresa</strong> (org_admin, self-service)</p>
+<div class="tbl-scroll"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Empresa</td>
+<td>Confirma nome, logo, setor, porte. Escolhe se o feed interno fica ligado, se o ranking interno fica ligado.</td>
+</tr>
+<tr>
+<td>2. Áreas</td>
+<td>Lista de áreas vem pré-semeada; org_admin edita, remove, adiciona e marca o líder de cada área.</td>
+</tr>
+<tr>
+<td>3. Pessoas</td>
+<td>Três formas de entrada, ver 3.2. Validação linha a linha com pré-visualização.</td>
+</tr>
+<tr>
+<td>4. Revisão e disparo</td>
+<td>Mostra: X convites, Y assentos livres, quem já tem conta no hub. Dispara.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Passo 2 — A pessoa recebe o convite</strong> (e-mail; opcionalmente WhatsApp) Clica → tela de aceite com nome da empresa, o que ela ganha e o aviso de privacidade (seção 9) → login/cadastro Stack Auth → <strong>onboarding pessoal curto (3 perguntas)</strong> com área e cargo já preenchidos pelo convite → cai direto na trilha da faixa 1.</p>
+<p><strong>Passo 3 — Acompanhamento</strong> (org_admin e CB veem o mesmo painel de ativação) Convites enviados / aceitos / pendentes / expirados, com botão de reenviar. Lembretes automáticos em D+2, D+7, D+14. Assentos ociosos aparecem em destaque.</p>
+<h3 id="três-formas-de-cadastrar-pessoas">3.2 Três formas de cadastrar pessoas</h3>
+<ol type="1">
+<li><strong>Colar e-mails</strong> — textarea, um por linha ou separado por vírgula. Rápido, sem metadados.</li>
+<li><strong>CSV</strong> — o caminho principal. Template para download: <code>nome,email,area,cargo,senioridade,email_do_lider,papel</code>
+<ul>
+<li>Validação por linha antes de importar: e-mail inválido, duplicado no arquivo, já convidado, já membro de outra empresa, área inexistente (oferecer criar), assentos insuficientes.</li>
+<li>Tela de pré-visualização mostrando erros por linha e permitindo corrigir na própria tabela.</li>
+<li>Importação é <strong>idempotente por <code>batch_id</code></strong>: reenviar o mesmo arquivo não duplica convite nem consome assento duas vezes.</li>
+</ul></li>
+<li><strong>Link de entrada por domínio</strong> — link único da empresa que só aceita e-mails <code>@dominio-verificado</code>, com teto de assentos e opção de exigir aprovação do org_admin. Resolve empresas grandes que não querem montar lista.</li>
+</ol>
+<p>Opcional (<code>settings.provision_mode = 'accounts'</code>): em vez de convite, <strong>criar as contas direto</strong> e enviar magic link de primeiro acesso. O aceite de termos/privacidade continua obrigatório no primeiro login.</p>
+<h3 id="regras-de-assento">3.3 Regras de assento</h3>
+<ul>
+<li>Assento é consumido <strong>no aceite</strong>, não no envio do convite.</li>
+<li>Convite pendente faz <strong>reserva leve</strong> de assento (configurável, padrão 7 dias). Ao expirar, devolve.</li>
+<li>Assentos esgotados: bloqueia novo convite com mensagem clara (“15/15 usados — libere um assento ou fale com a CB”) e botão “solicitar mais assentos” que abre chamado para o Success.</li>
+<li>Remover pessoa: devolve o assento, mantém histórico/faixa/projetos, e a conta dela <strong>rebaixa para o plano individual que tiver (ou free)</strong> — sem apagar nada.</li>
+<li>Trocar pessoa de área: não mexe em assento nem em progresso.</li>
+</ul>
+<h3 id="adoção-de-conta-existente-caso-real-e-frequente">3.4 Adoção de conta existente (caso real e frequente)</h3>
+<p>Funcionário já é aluno B2C. O convite <strong>vincula</strong> a conta existente: - não cria conta nova, não pede nova senha; - mantém todo o progresso, faixas, projetos, streak; - se ele tem assinatura paga individual ativa, mostrar aviso (“sua empresa agora cobre seu acesso”) e <strong>não</strong> cancelar automaticamente — sinalizar para o Success tratar; - se ele já pertence a outra empresa ativa, o convite exige confirmação explícita e registra a troca (<code>company_members.status = 'removed'</code> na anterior).</p>
+<h3 id="endpoints">3.5 Endpoints</h3>
+<pre><code>POST   /api/admin/companies                      cria empresa (CB)
+POST   /api/admin/companies/:id/setup-link       gera magic link do wizard
+GET    /api/org/:companyId/overview              assentos, ativação, status
+POST   /api/org/:companyId/departments           CRUD de áreas
+POST   /api/org/:companyId/invites               lote de convites (array)
+POST   /api/org/:companyId/invites/preview       valida CSV e devolve erros por linha
+POST   /api/org/:companyId/invites/:id/resend
+DELETE /api/org/:companyId/invites/:id           revoga
+POST   /api/org/:companyId/join-link             cria/rotaciona link por domínio
+GET    /api/invites/:token                       dados públicos do convite (empresa, expiração)
+POST   /api/invites/:token/accept                consome assento, cria vínculo
+DELETE /api/org/:companyId/members/:userId       remove e devolve assento</code></pre>
+<h3 id="critérios-de-aceite">3.6 Critérios de aceite</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Org_admin cadastra 15 pessoas por CSV, com áreas e cargos, sem nenhuma intervenção da CB.</label></li>
+<li><label><input type="checkbox" />Arquivo com erro mostra os erros por linha e permite corrigir antes de importar; nada é importado pela metade.</label></li>
+<li><label><input type="checkbox" />Reimportar o mesmo CSV não gera convite duplicado nem consome assento a mais.</label></li>
+<li><label><input type="checkbox" />Aluno B2C existente aceita o convite e mantém progresso, faixa e projetos.</label></li>
+<li><label><input type="checkbox" />Assento é liberado ao remover a pessoa e ao expirar o convite.</label></li>
+<li><label><input type="checkbox" />Membro ativo acessa o conteúdo Premium pelo contrato da empresa, sem assinatura individual.</label></li>
+<li><label><input type="checkbox" />Empresa pausada/vencida (<code>status != 'active'</code> ou <code>contract_end &lt; hoje</code>) rebaixa todos os assentos automaticamente, sem apagar dado.</label></li>
+<li><label><input type="checkbox" />Painel de ativação mostra, em tempo real, convidados / aceitos / ativos na semana.</label></li>
+</ul>
+<hr />
+<h2 id="módulo-2-identidade-do-usuário">4. Módulo 2 — Identidade do usuário</h2>
+<p>Objetivo: responder, para qualquer pessoa da base, <strong>quem é, de onde vem, o que faz, em que nível está</strong> — e conseguir agrupar por isso (seção 7).</p>
+<h3 id="campos">4.1 Campos</h3>
+<p>Tabela <code>user_profiles</code> (1:1 com usuário), além do que já existe:</p>
+<div class="tbl-scroll"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Origem</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>job_family</code></td>
+<td>enum</td>
+<td>convite ou onboarding</td>
+<td>Marketing, Vendas, Financeiro, RH, Jurídico, Operações, TI/Produto, Atendimento, Diretoria, Educação, Outro</td>
+</tr>
+<tr>
+<td><code>seniority</code></td>
+<td>enum</td>
+<td>convite ou onboarding</td>
+<td>estagiário, analista, especialista, coordenador, gerente, diretor, C-level, sócio/dono</td>
+</tr>
+<tr>
+<td><code>job_title</code></td>
+<td>texto</td>
+<td>livre</td>
+<td>cargo como a pessoa escreve</td>
+</tr>
+<tr>
+<td><code>tech_level</code></td>
+<td>enum</td>
+<td>auto-declarado</td>
+<td>não-técnico, uso ferramentas no-code, programo pouco, programo</td>
+</tr>
+<tr>
+<td><code>ai_level_declared</code></td>
+<td>enum</td>
+<td>onboarding</td>
+<td>nunca usei, uso ChatGPT, automatizo tarefas, construo apps</td>
+</tr>
+<tr>
+<td><code>goal</code></td>
+<td>enum</td>
+<td>onboarding</td>
+<td>aprender pra mim, ensinar meu time, minha empresa pediu, construir um produto, mudar de carreira</td>
+</tr>
+<tr>
+<td><code>tools_used</code></td>
+<td>texto[]</td>
+<td>onboarding</td>
+<td>ChatGPT, Claude, Cursor, n8n, Make, Zapier, Excel/Sheets, …</td>
+</tr>
+<tr>
+<td><code>github_username</code></td>
+<td>texto</td>
+<td>OAuth</td>
+<td>ver 5.4</td>
+</tr>
+<tr>
+<td><code>linkedin_url</code></td>
+<td>texto</td>
+<td>perfil</td>
+<td>usado no selo de faixa</td>
+</tr>
+<tr>
+<td><code>city</code> / <code>state</code></td>
+<td>texto</td>
+<td>perfil</td>
+<td>recorte regional para lives</td>
+</tr>
+<tr>
+<td><code>timezone</code></td>
+<td>texto</td>
+<td>auto</td>
+<td>agendamento de turmas</td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td>enum</td>
+<td>usuário</td>
+<td><code>public</code>, <code>company_only</code>, <code>private</code> — controla o que aparece no feed/perfil público</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Regra de origem:</strong> gravar <code>source</code> (<code>self</code>, <code>company</code>, <code>inferred</code>) por campo, ou uma tabela <code>user_profile_fields(user_id, field, value, source, updated_at)</code>. O dado declarado pela empresa <strong>não</strong> é sobrescrito por auto-declaração posterior sem confirmação, e vice-versa. Isso evita o clássico “o CSV do RH dizia gerente, a pessoa mudou pra analista e o painel do sponsor ficou errado”.</p>
+<h3 id="onboarding-pessoal">4.2 Onboarding pessoal</h3>
+<p>Reaproveitar o motor de onboarding existente (o mesmo que já produziu as 164 respostas em <code>admin → onboarding-insights</code>), com duas mudanças:</p>
+<ol type="1">
+<li><strong>Perguntar só o que falta.</strong> Convidado por empresa já chega com empresa, área e cargo — não perguntar de novo. Máximo 3 perguntas: nível de IA, objetivo, o que quer construir nos próximos 30 dias.</li>
+<li><strong>Pergunta de roteamento</strong> (para todo mundo, inclusive B2C): “você quer trazer sua empresa?” → se sim, captura empresa/cargo e cai numa fila de expansão do comercial. É o único caminho de entrada inbound de empresa que temos.</li>
+</ol>
+<h3 id="perfil-visível">4.3 Perfil visível</h3>
+<ul>
+<li><strong>Perfil público:</strong> nome, avatar, faixa, builds publicados, badges, cidade, streak. Empresa só aparece se <code>visibility = public</code> <strong>e</strong> a empresa permitir (<code>settings.show_company_on_profile</code>).</li>
+<li><strong>Perfil interno (colegas da mesma empresa):</strong> acrescenta área, cargo, builds internos.</li>
+<li><strong>Perfil administrativo (org_admin da empresa e CB):</strong> tudo, incluindo atividade.</li>
+</ul>
+<hr />
+<h2 id="módulo-3-progressão-o-strava-do-build">5. Módulo 3 — Progressão: o “Strava do build”</h2>
+<p>A referência é explícita: <strong>Strava para quem constrói com IA</strong>. Não é curso com barra de progresso — é registro público do que a pessoa entregou, com constância visível.</p>
+<h3 id="duas-camadas-que-não-se-misturam">5.1 Duas camadas que não se misturam</h3>
+<div class="tbl-scroll"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Camada</th>
+<th>O que é</th>
+<th>Como muda</th>
+<th>Para que serve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Faixa</strong> (nível)</td>
+<td>Operador → Construtor → Builder → Embaixador</td>
+<td>Só por <strong>artefato entregue e revisado por humano</strong>. Nunca por XP, nunca por aula assistida.</td>
+<td>Selo de capacidade. É o que vale para a empresa e para o LinkedIn.</td>
+</tr>
+<tr>
+<td><strong>Atividade</strong> (pontos, streak, liga)</td>
+<td>Motor de hábito semanal</td>
+<td>Automática, por evento</td>
+<td>Ranking, constância, sinal de risco, feed</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se pontos derem faixa, a faixa vira participação. Manter separado é o que faz o sistema significar alguma coisa.</p>
+<p><strong>Critérios das faixas</strong> (rubrica visível na própria tela de submissão):</p>
+<ol type="1">
+<li><strong>Operador</strong> — automatizou uma tarefa do próprio trabalho. Evidência: o que era, quanto tempo levava, link/print do que roda hoje.</li>
+<li><strong>Construtor</strong> — construiu algo que <strong>outra pessoa</strong> usa. Evidência: quem usa, desde quando, link.</li>
+<li><strong>Builder</strong> — algo em produção na área, com impacto medido. Evidência: link, número antes/depois, quem aprovou.</li>
+<li><strong>Embaixador</strong> — ensinou e certificou outra pessoa internamente. Evidência: quem, o quê, artefato do certificado.</li>
+</ol>
+<h3 id="ledger-de-eventos-base-de-tudo">5.2 Ledger de eventos (base de tudo)</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> activity_events (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>           bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  user_id      text <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  company_id   bigint <span class="kw">references</span> companies(<span class="kw">id</span>),   <span class="co">-- snapshot da empresa no momento do evento</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">type</span>         text <span class="kw">not</span> <span class="kw">null</span>,                     <span class="co">-- ver tabela abaixo</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ref_type     text,                              <span class="co">-- &#39;aula&#39;,&#39;curso&#39;,&#39;project&#39;,&#39;artifact&#39;,&#39;repo&#39;,&#39;post&#39;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ref_id       text,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  points       <span class="dt">int</span> <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="dv">0</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  occurred_at  timestamptz <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> now(),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  season_id    bigint <span class="kw">references</span> seasons(<span class="kw">id</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  metadata     jsonb <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;{}&#39;</span>:<span class="ch">:jsonb</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  dedupe_key   text <span class="kw">unique</span>                        <span class="co">-- ex: &#39;aula_concluida:user:123:aula:45&#39;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">index</span> <span class="kw">on</span> activity_events (user_id, occurred_at <span class="kw">desc</span>);</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">index</span> <span class="kw">on</span> activity_events (company_id, occurred_at <span class="kw">desc</span>);</span></code></pre></div>
+<p>Tudo (perfil, painel da empresa, admin, Builder Score, feed) lê daqui. <code>dedupe_key</code> único torna reprocessamento seguro.</p>
+<h3 id="eventos-e-pontos-v1">5.3 Eventos e pontos v1</h3>
+<p>Pontos ficam em <strong>tabela de configuração versionada</strong> (<code>point_rules</code>), nunca hardcoded — vamos calibrar.</p>
+<div class="tbl-scroll"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Evento</th>
+<th>Pontos</th>
+<th>Teto</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>etapa_concluida</code></td>
+<td>2</td>
+<td>20/dia</td>
+<td>granularidade que a API de aulas já expõe (<code>completed_etapas</code>)</td>
+</tr>
+<tr>
+<td><code>aula_concluida</code></td>
+<td>10</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td><code>curso_concluido</code></td>
+<td>60</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td><code>projeto_submetido</code></td>
+<td>0</td>
+<td>—</td>
+<td>pontua só quando aprovado (evita spam)</td>
+</tr>
+<tr>
+<td><code>projeto_aprovado</code></td>
+<td>150</td>
+<td>—</td>
+<td>usa o fluxo de aprovação que já existe em Builders Projects</td>
+</tr>
+<tr>
+<td><code>deploy_verificado</code></td>
+<td>100</td>
+<td>1 por projeto</td>
+<td>ver 5.4</td>
+</tr>
+<tr>
+<td><code>github_conectado</code></td>
+<td>50</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><code>repo_vinculado</code></td>
+<td>30</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td><code>semana_com_commit</code></td>
+<td>25</td>
+<td>1/semana</td>
+<td>constância, não volume</td>
+</tr>
+<tr>
+<td><code>build_usado_por_colega</code></td>
+<td>200</td>
+<td>—</td>
+<td>evidência de uso confirmada por um colega da empresa — <strong>o evento mais valioso do sistema</strong></td>
+</tr>
+<tr>
+<td><code>artefato_aprovado</code> (faixa)</td>
+<td>300</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td><code>demo_no_builders_club</code></td>
+<td>120</td>
+<td>—</td>
+<td>marcado pela CB</td>
+</tr>
+<tr>
+<td><code>mentoria_dada</code> / <code>resposta_util</code></td>
+<td>20</td>
+<td>5/semana</td>
+<td>marcado por quem recebeu</td>
+</tr>
+<tr>
+<td><code>streak_semanal</code></td>
+<td>30</td>
+<td>1/semana</td>
+<td>semana com ao menos 1 evento de construção</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Antifraude:</strong> teto por tipo, <code>dedupe_key</code>, pontos de projeto só pós-aprovação, e <strong>ranking padrão por atividade dos últimos 90 dias</strong> (o total histórico existe, mas não é o que aparece no topo — senão veterano trava o ranking pra sempre).</p>
+<h3 id="sinais-de-construção-o-que-diferencia-de-lms">5.4 Sinais de construção (o que diferencia de LMS)</h3>
+<ol type="1">
+<li><strong>GitHub OAuth</strong> (escopo mínimo, leitura de repos públicos + metadados). Ao conectar: badge, e sincronização semanal contando semanas com commit/PR nos repos que a pessoa vinculou. Não precisa ler código.</li>
+<li><strong>Verificação de deploy</strong> — a pessoa informa a URL do build; o hub confirma propriedade por um dos caminhos: arquivo <code>/.well-known/culturabuilder.txt</code> com o token, meta tag <code>&lt;meta name="cb-verify" content="..."&gt;</code>, ou DNS TXT. Depois disso, um <em>health check</em> semanal marca “no ar” — a galeria de builds mostra o que <strong>está de pé</strong>, não o que já esteve.</li>
+<li><strong>Evidência de uso</strong> — no formulário de artefato, a pessoa indica colegas que usam; o hub envia confirmação de um clique para eles. Confirmado, dispara <code>build_usado_por_colega</code>.</li>
+<li><strong>Horas economizadas declaradas</strong> — campo numérico simples no artefato; agregado vira métrica do painel do sponsor. Sempre rotulado como <strong>declarado</strong>, nunca como medido.</li>
+</ol>
+<h3 id="temporadas-e-ligas">5.5 Temporadas e ligas</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> seasons (<span class="kw">id</span> bigserial <span class="kw">primary</span> <span class="kw">key</span>, name text, theme text, starts_on <span class="dt">date</span>, ends_on <span class="dt">date</span>);</span></code></pre></div>
+<p>Ranking de atividade zera por temporada (trimestre); faixas e badges são permanentes. Rankings disponíveis: minha área, minha empresa, global, temporada. Empresa pode desligar ranking interno (<code>settings.ranking_enabled</code>).</p>
+<h3 id="tela-de-perfil-o-strava">5.6 Tela de perfil (o “Strava”)</h3>
+<p>Acima da dobra: faixa atual + <strong>checklist do que falta para a próxima</strong> (rubrica, não barra); streak de semanas construindo; heatmap de 12 meses; builds em produção com link e status “no ar”; horas economizadas declaradas; badges; posição na temporada.</p>
+<h3 id="resumo-semanal">5.7 Resumo semanal</h3>
+<p>E-mail (e WhatsApp, se houver opt-in) toda segunda: o que você construiu, streak, posição, o que falta para a próxima faixa, uma sugestão de próximo passo. É o loop de retenção — o mesmo papel que o resumo semanal cumpre no Strava.</p>
+<h3 id="critérios-de-aceite-1">5.8 Critérios de aceite</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Nenhuma faixa é concedida sem artefato aprovado por revisor humano, com registro de auditoria (quem, quando, feedback).</label></li>
+<li><label><input type="checkbox" /><code>belt_awards</code> é imutável: revogação só por registro administrativo separado, nunca deleção.</label></li>
+<li><label><input type="checkbox" />Reprocessar eventos não duplica pontos.</label></li>
+<li><label><input type="checkbox" />Perfil mostra faixa, streak, builds no ar e o que falta para subir.</label></li>
+<li><label><input type="checkbox" />GitHub conectado gera evento semanal sem intervenção manual.</label></li>
+<li><label><input type="checkbox" />URL de deploy não verificada não conta ponto.</label></li>
+</ul>
+<hr />
+<h2 id="módulo-4-painel-da-empresa">6. Módulo 4 — Painel da empresa</h2>
+<p>Duas visões, dois papéis (ver seção 9): <strong>org_admin</strong> (opera, vê indivíduo) e <strong>sponsor</strong> (decide renovação, vê agregado).</p>
+<h3 id="telas">6.1 Telas</h3>
+<p><strong>Visão geral</strong> — assentos usados/livres/ativados; % ativos na semana e no mês; distribuição por faixa; builds em produção; horas economizadas declaradas; Builder Score e a <strong>curva desde o dia zero</strong> (nunca só o valor atual — o produto de renovação é a curva).</p>
+<p><strong>Pessoas</strong> (só org_admin) — tabela com filtros (área, faixa, cargo, senioridade, status) e colunas: última atividade, % da trilha, aulas concluídas, builds, faixa, streak. Ações: reenviar convite, trocar área, marcar líder, promover a org_admin, remover.</p>
+<p><strong>Áreas</strong> — comparativo entre áreas: adoção, builds, faixas, dores do diagnóstico. É o insumo do “quem precisa de qual conteúdo”.</p>
+<p><strong>Em risco</strong> — três listas prontas: convite não aceito há 7 dias; sem login há 14 dias; sem nenhum build em 30 dias. Cada linha com botão de cutucar (notificação no hub + e-mail/WhatsApp).</p>
+<p><strong>Builds da empresa</strong> — galeria interna, com filtro por área, link, status “no ar”, quem usa, impacto declarado. Vira o material da reunião trimestral.</p>
+<p><strong>Relatório</strong> — export PDF/CSV do trimestre e envio automático mensal ao sponsor.</p>
+<h3 id="builder-score-índice-da-conta">6.2 Builder Score (índice da conta)</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> company_score_snapshots (</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  company_id bigint <span class="kw">not</span> <span class="kw">null</span> <span class="kw">references</span> companies(<span class="kw">id</span>) <span class="kw">on</span> <span class="kw">delete</span> <span class="kw">cascade</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  period_start <span class="dt">date</span> <span class="kw">not</span> <span class="kw">null</span>,                <span class="co">-- semana ISO</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  active_seats_pct <span class="dt">numeric</span>,                  <span class="co">-- assentos com login+ação na semana / total</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  builds_in_production <span class="dt">int</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  depts_with_build_pct <span class="dt">numeric</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  ambassadors_count <span class="dt">int</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  hours_saved_declared <span class="dt">numeric</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  score <span class="dt">numeric</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  formula_version text <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  created_at timestamptz <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> now(),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">unique</span> (company_id, period_start)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<p>Fórmula v1 (versionada, ajustável): <code>score = 40%·assentos_ativos + 30%·áreas_com_build + 20%·builds_em_produção(normalizado) + 10%·embaixadores</code>. Job semanal para toda empresa ativa; falha do job alerta o time. O primeiro snapshot é o <strong>Score Zero</strong>, gravado no início do contrato — é a linha de base da renovação.</p>
+<h3 id="critérios-de-aceite-2">6.3 Critérios de aceite</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Sponsor vê apenas a própria empresa e apenas dados agregados por área.</label></li>
+<li><label><input type="checkbox" />Org_admin vê indivíduo, mas o aviso de privacidade foi aceito pelo usuário no convite.</label></li>
+<li><label><input type="checkbox" />Snapshot semanal roda sozinho e nunca sobrescreve histórico.</label></li>
+<li><label><input type="checkbox" />Export PDF sai idêntico ao que está na tela (sem número que só existe no PDF).</label></li>
+<li><label><input type="checkbox" />Empresa com contrato vencido some dos jobs, mas mantém histórico consultável pela CB.</label></li>
+</ul>
+<hr />
+<h2 id="módulo-5-admin-cb-clusterização-e-audiências">7. Módulo 5 — Admin CB: clusterização e audiências</h2>
+<p>Esse módulo é o que transforma a base em produto: hoje temos milhares de usuários e nenhuma forma de perguntar <em>“quem são os iniciantes de marketing dentro das empresas clientes?”</em>.</p>
+<h3 id="filtros-combináveis-sobre-toda-a-base">7.1 Filtros combináveis (sobre toda a base)</h3>
+<p>empresa · setor · porte · área/<code>job_family</code> · <code>seniority</code> · faixa atual · <code>tech_level</code> · <code>ai_level_declared</code> · objetivo declarado · atividade (ativo 7/30/90 dias, nunca ativou) · tipo de conta (B2C / B2B / ambos) · plano · cidade/UF · data de entrada · tem projeto publicado? · tem GitHub conectado? · temporada de entrada · trilha em curso.</p>
+<h3 id="audiências-salvas">7.2 Audiências salvas</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> audiences (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  name text <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  description text,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">filter</span> jsonb <span class="kw">not</span> <span class="kw">null</span>,          <span class="co">-- os filtros, não a lista: é dinâmico</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  is_dynamic <span class="dt">boolean</span> <span class="kw">default</span> <span class="kw">true</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  created_by text,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  created_at timestamptz <span class="kw">default</span> now()</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<p>Uma audiência salva é reutilizável em: convidar para live, criar turma da Fundação, liberar conteúdo específico (gate por audiência), campanha de e-mail/WhatsApp, export CSV, e comparação de coorte (“marketing iniciante evolui mais devagar que financeiro iniciante?”).</p>
+<p>Caso de uso alvo, que precisa funcionar no dia 1: <strong>“pessoas de Marketing, senioridade analista/coordenador, faixa Operador ou sem faixa, de qualquer empresa cliente”</strong> → 1 clique → convidar para uma live específica daquele recorte.</p>
+<h3 id="outras-telas-do-admin-cb">7.3 Outras telas do admin CB</h3>
+<ul>
+<li><strong>Contas</strong> — lista de empresas com adoção, Score, tendência, risco de churn, próximo marco, dono do Success.</li>
+<li><strong>Conteúdo x cluster</strong> — o que cada cluster consome, abandona e conclui. É o que decide o que gravar em vez de achismo.</li>
+<li><strong>Funil de ativação</strong> — convidados → aceitos → primeira aula → primeiro build → primeira faixa, com corte por empresa e por área. O gargalo aparece aqui.</li>
+<li><strong>Fila de revisão de artefatos</strong> — pendências por idade, SLA de 5 dias úteis, alerta de estouro.</li>
+</ul>
+<h3 id="critérios-de-aceite-3">7.4 Critérios de aceite</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Qualquer combinação de filtros devolve contagem em menos de 2 segundos na base atual.</label></li>
+<li><label><input type="checkbox" />Audiência salva é dinâmica (recalcula), com opção de congelar snapshot.</label></li>
+<li><label><input type="checkbox" />Export respeita LGPD: registro de quem exportou, quando e com qual filtro.</label></li>
+</ul>
+<hr />
+<h2 id="módulo-6-feed-com-escopo-comunidade-canal-da-empresa">8. Módulo 6 — Feed com escopo (comunidade + canal da empresa)</h2>
+<h3 id="modelo">8.1 Modelo</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> posts (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> bigserial <span class="kw">primary</span> <span class="kw">key</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  author_user_id text <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  company_id bigint <span class="kw">references</span> companies(<span class="kw">id</span>),      <span class="co">-- obrigatório quando visibility != &#39;public&#39;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  department_id bigint <span class="kw">references</span> departments(<span class="kw">id</span>), <span class="co">-- opcional, escopo mais estreito</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  visibility text <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;public&#39;</span>,       <span class="co">-- public | company | department</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  kind text <span class="kw">not</span> <span class="kw">null</span> <span class="kw">default</span> <span class="st">&#39;text&#39;</span>,               <span class="co">-- text | ship | question | announcement</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">body</span> text <span class="kw">not</span> <span class="kw">null</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  media jsonb <span class="kw">default</span> <span class="st">&#39;[]&#39;</span>:<span class="ch">:jsonb</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  ref_type text, ref_id text,                      <span class="co">-- ex: kind=&#39;ship&#39; aponta pro projeto</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  pinned_until timestamptz,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  created_at timestamptz <span class="kw">default</span> now(),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  deleted_at timestamptz</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> post_comments (<span class="op">..</span>.);</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> post_reactions (<span class="op">..</span>.);</span></code></pre></div>
+<h3 id="regras">8.2 Regras</h3>
+<ul>
+<li>Ao publicar, o usuário escolhe o alcance: <strong>Comunidade</strong> (todo o hub) ou <strong>Minha empresa</strong> (e, se fizer sentido, <strong>Minha área</strong>). Padrão: Comunidade para B2C, e configurável por empresa para B2B (<code>settings.default_post_scope</code>).</li>
+<li>Filtragem no <strong>servidor</strong>, sempre: post <code>company</code> só é consultável por membro ativo daquela empresa. Nunca filtrar no cliente.</li>
+<li><strong>Post automático de “ship”</strong>: quando um build é aprovado ou um deploy é verificado, oferecer publicação com um clique (opt-in, nunca automático sem consentimento) — é isso que faz o feed parecer o Strava e não um mural morto.</li>
+<li><code>announcement</code> só por org_admin, com fixação no topo e notificação.</li>
+<li>Moderação: CB tem acesso a posts de empresa para moderação, com <strong>registro de acesso</strong> e a regra escrita nos termos. A empresa pode desligar o canal inteiro (<code>settings.feed_enabled = false</code>).</li>
+<li>No feed público, a empresa da pessoa só aparece se ela e a empresa permitirem (seção 4.3).</li>
+<li>Digest: resumo do canal da empresa por e-mail, semanal.</li>
+</ul>
+<h3 id="critérios-de-aceite-4">8.3 Critérios de aceite</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Post de empresa nunca aparece em nenhuma consulta pública, incluindo busca, notificação e API.</label></li>
+<li><label><input type="checkbox" />Ex-membro perde acesso ao canal na hora da remoção.</label></li>
+<li><label><input type="checkbox" />Empresa com feed desligado não expõe nenhuma rota do canal.</label></li>
+</ul>
+<hr />
+<h2 id="permissões-e-privacidade">9. Permissões e privacidade</h2>
+<h3 id="papéis">9.1 Papéis</h3>
+<div class="tbl-scroll"><table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Escopo</th>
+<th>Vê indivíduo</th>
+<th>Gerencia assentos</th>
+<th>Vê conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>member</code></td>
+<td>próprio perfil + canal da empresa</td>
+<td>só o próprio</td>
+<td>não</td>
+<td>pelo contrato</td>
+</tr>
+<tr>
+<td><code>lead</code> (líder de área)</td>
+<td>sua área</td>
+<td>sua área</td>
+<td>não</td>
+<td>pelo contrato</td>
+</tr>
+<tr>
+<td><code>org_admin</code></td>
+<td>empresa inteira</td>
+<td>sim</td>
+<td>sim</td>
+<td>pelo contrato</td>
+</tr>
+<tr>
+<td><code>sponsor</code></td>
+<td>empresa inteira</td>
+<td><strong>não</strong> — só agregado por área</td>
+<td>não</td>
+<td>leitura do painel</td>
+</tr>
+<tr>
+<td><code>reviewer</code> (CB/professor)</td>
+<td>fila de artefatos</td>
+<td>só o que revisa</td>
+<td>não</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>cb_admin</code></td>
+<td>tudo</td>
+<td>sim</td>
+<td>sim</td>
+<td>tudo</td>
+</tr>
+</tbody>
+</table></div>
+<p>Papéis são <strong>cumulativos</strong> (o sponsor costuma também ser org_admin — então guarde os dois, não force escolha).</p>
+<h3 id="lgpd-e-confiança">9.2 LGPD e confiança</h3>
+<ul>
+<li>No aceite do convite, a pessoa lê e aceita, em texto claro: <strong>o que a empresa vê</strong> (progresso, faixa, builds, última atividade) e <strong>o que a empresa não vê</strong> (conteúdo de mensagens privadas, dados de assinatura pessoal anterior, respostas de onboarding marcadas como pessoais).</li>
+<li>Base legal: execução de contrato entre CB e empresa; o titular pode sair da empresa no hub a qualquer momento (e volta ao plano individual).</li>
+<li>Sponsor <strong>não</strong> vê assiduidade individual. Essa restrição é produto, não detalhe: é o que evita o hub virar ponto eletrônico e matar o engajamento.</li>
+<li>Toda exportação e todo acesso administrativo a dado de empresa é registrado (<code>audit_log</code>: ator, ação, alvo, quando, filtro).</li>
+<li>Retenção: pessoa removida mantém conta e histórico próprios; o vínculo com a empresa fica marcado como encerrado, não apagado.</li>
+</ul>
+<hr />
+<h2 id="backlog-recomendado-depois-do-núcleo-em-ordem-de-valor">10. Backlog recomendado (depois do núcleo, em ordem de valor)</h2>
+<ol type="1">
+<li><strong>Trilhas por área</strong> (playbooks de Marketing, Financeiro, RH, Jurídico, Comercial, Operações) com gate por faixa. O catálogo atual é 100% dev-centric — é a maior lacuna para funcionário não-técnico.</li>
+<li><strong>Turmas/cohorts</strong> — Fundação mensal com calendário, presença e gravação. Resolve entrada em datas diferentes sem depender de agenda de fundador.</li>
+<li><strong>Certificado e selo compartilhável</strong> por faixa (imagem + link verificável + post pronto de LinkedIn). Marketing orgânico gratuito, feito pelo aluno.</li>
+<li><strong>Agente de WhatsApp</strong> — lembrete, dúvida, submissão de build por áudio/foto, resumo semanal. Reaproveitar a stack de WhatsApp que já roda na infra da Águia.</li>
+<li><strong>Diagnóstico por área</strong> (Builder Score Zero) — questionário por departamento antes do início: responsável, tamanho do time, horas perdidas, sistemas, dor 0–12, três quick wins. Destrava venda e vira a linha de base.</li>
+<li><strong>Biblioteca de builds reutilizáveis</strong> — build de uma empresa disponível (com permissão) como template para outra. É o efeito de rede do produto.</li>
+<li><strong>Pré-triagem de artefatos por IA</strong> — a IA aplica a rubrica e escreve o rascunho do parecer; humano decide. É o que segura o SLA de 5 dias quando escalar.</li>
+<li><strong>SSO/SAML + verificação de domínio</strong> — exigência de empresa grande.</li>
+<li><strong>Cobrança por assento</strong> (quantity no gateway) — hoje o contrato é faturado fora e provisionado na mão.</li>
+<li><strong>API de leitura + webhooks do Score</strong> — cliente puxa para o BI dele; e o Success monta relatório sem scraping.</li>
+<li><strong>Painel do líder de área</strong> — recorte do painel para o gestor direto (o gestor é quem cobra de verdade).</li>
+<li><strong>Detecção de assento zumbi</strong> — assento sem uso há 30 dias vira sugestão de realocação para outra pessoa da empresa. Aumenta valor percebido do contrato sem vender mais nada.</li>
+</ol>
+<hr />
+<h2 id="ordem-de-implementação">11. Ordem de implementação</h2>
+<div class="tbl-scroll"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Módulo</th>
+<th>Estimativa</th>
+<th>Por que nessa ordem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Descoberta: mapa do schema atual, decisão sobre teams do Stack Auth, helper único de entitlement</td>
+<td>2–3 dias</td>
+<td>Bloqueia tudo; risco é de acoplamento invisível</td>
+</tr>
+<tr>
+<td>1</td>
+<td><strong>M1 — empresa, assentos, áreas, convites, wizard de onboarding</strong></td>
+<td>6–9 dias</td>
+<td>Base de todo o resto e a dor operacional de hoje</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>M2 — perfil/identidade + onboarding com roteamento</strong></td>
+<td>3–4 dias</td>
+<td>Sem isso não existe clusterização</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>M3a — ledger de eventos + pontos + streak + perfil</strong></td>
+<td>5–7 dias</td>
+<td>Instrumentação: todo módulo seguinte lê daqui</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>M4 — painel da empresa (org_admin e sponsor)</strong></td>
+<td>5–7 dias</td>
+<td>Primeiro entregável que o cliente vê</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>M3b — faixas: artefatos, fila de revisão, awards</strong></td>
+<td>8–12 dias</td>
+<td>Maior fase; é workflow humano com SLA, não barra de progresso</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>M5 — admin CB: filtros e audiências</strong></td>
+<td>4–6 dias</td>
+<td>Depende de M2 + M3a</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>M6 — feed com escopo</strong></td>
+<td>4–6 dias</td>
+<td>Alto valor percebido, baixo acoplamento; pode andar em paralelo</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Builder Score + snapshots</strong></td>
+<td>3–5 dias</td>
+<td>Precisa de M3b para contar artefato</td>
+</tr>
+</tbody>
+</table></div>
+<p>Total aproximado: <strong>35–55 dias de desenvolvimento</strong> após a descoberta, com um desenvolvedor. Cada módulo entra atrás de feature flag e pode ir para produção sozinho.</p>
+<p><strong>Riscos:</strong> (1) qualquer atalho do tipo “faço fora do hub com login próprio” vira dívida permanente — não fazer; (2) fila de revisão sem dono definido vira gargalo (o SLA é de gente, não de código); (3) acoplamento de billing/entitlement ao plano individual pode ser maior do que parece de fora — por isso a descoberta vem antes de qualquer estimativa virar compromisso.</p>
+<hr />
+<h2 id="perguntas-que-precisamos-responder-na-primeira-call">12. Perguntas que precisamos responder na primeira call</h2>
+<ol type="1">
+<li><strong>Schema atual</strong>: dump de usuário, assinatura, progresso de aula, projeto/challenger, badges, onboarding. Onde já existe algo parecido com empresa/organização?</li>
+<li><strong>Stack Auth</strong>: a versão usada tem <em>teams/organizations</em> nativos? Se tiver, M1 encurta bastante — mas o vínculo de negócio (assento, área, cargo) continua no nosso banco.</li>
+<li><strong>Entitlement</strong>: hoje o acesso é concedido por rota a partir do plano individual (<code>features[].route_path</code>). Qual o menor caminho para adicionar concessão por empresa sem reescrever o checkout?</li>
+<li><strong>Billing</strong>: dá para representar quantidade (assentos) no gateway atual, ou seguimos com fatura fora + provisionamento manual no começo?</li>
+<li><strong>Feed</strong>: existe alguma estrutura de post/comunidade hoje, ou M6 nasce do zero?</li>
+<li><strong>Notificações</strong>: qual o canal já implementado (e-mail transacional, push, WhatsApp)? Reaproveitar, não montar outro.</li>
+<li><strong>GitHub OAuth</strong>: alguma restrição para adicionar um provider de conexão (não de login) ao perfil?</li>
+<li><strong>Jobs agendados</strong>: existe infraestrutura de cron/worker no deploy atual para os snapshots semanais e o resumo de segunda-feira?</li>
+<li><strong>Ambientes</strong>: existe staging? Precisamos de um para testar importação de CSV com dado real de cliente sem risco.</li>
+<li><strong>Os dois SKUs B2B quebrados no checkout público</strong> (R$ 297 sem método de pagamento e R$ 499,90 expirado): consertar ou remover?</li>
+</ol>
+<hr />
+<p><em>Cultura Builder · especificação interna · 20/08/2026. Contexto de produto e metodologia: metodo.brunopessoa.com (deck), /plano.html (plano B2B completo), /briefing-produto.html (spec F0–F4 anterior, que este documento substitui e amplia).</em></p>
+
+
+<footer>
+  CULTURA BUILDER · SPEC HUB B2B · INTERNO · 20.08.2026<br>
+  Contexto: <a href="/plano.html">plano B2B completo</a> · <a href="/briefing-produto.html">spec F0–F4 anterior</a> · <a href="/index.html">deck do Método Builder</a>
+</footer>
+
+</div>
+</body>
+</html>
