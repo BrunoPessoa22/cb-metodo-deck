@@ -21,3 +21,22 @@ git add -A && git commit -m "..." && git push
 ```
 
 Design: CB Enterprise (ink #0C0D0E / bone #F4F5F1 / orange #F4632F, Geist + Geist Mono), sem gradientes. Assinatura visual: a faixa (belt) — capa, slide de níveis e barra de progresso.
+
+## Spec da camada B2B do hub
+
+- `spec-hub-b2b.md` — fonte (é o arquivo que vai para o dev do hub / Claude Code dele)
+- `spec-b2b.html` — versão publicada em https://metodo.brunopessoa.com/spec-b2b.html
+- `spec-hub-b2b.pdf` — PDF para enviar por WhatsApp/e-mail
+
+Editar sempre o `.md` e regerar:
+
+```bash
+python3 build-spec.py            # requer pandoc
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --no-pdf-header-footer \
+  --print-to-pdf=spec-hub-b2b.pdf "file://$PWD/spec-b2b.html"
+git add -A && git commit -m "..." && git push
+# redeploy: Coolify app igfglw7z9w8dgoxpzar3dbvt
+```
+
+Arquivo novo só aparece no ar depois de ganhar uma linha `COPY` no `Dockerfile`.

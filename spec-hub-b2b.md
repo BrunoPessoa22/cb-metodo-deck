@@ -128,9 +128,13 @@ create table company_invites (
   expires_at     timestamptz not null,
   accepted_at    timestamptz,
   accepted_user_id text,
-  created_at     timestamptz not null default now(),
-  unique (company_id, email) where status in ('pending','accepted')
+  created_at     timestamptz not null default now()
 );
+-- um convite vivo por e-mail por empresa (indice parcial; `citext` exige a extensao citext,
+-- senao usar text + lower(email) no indice)
+create unique index company_invites_live_uniq
+  on company_invites (company_id, email)
+  where status in ('pending','accepted');
 
 -- 2.4 Entitlement por empresa (acesso ao conteúdo pelo contrato, não pela assinatura pessoal)
 create table company_entitlements (
